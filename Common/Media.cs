@@ -9,20 +9,20 @@ namespace Jukebox.NET.Common
 
 		public Media()
 		{
-			Id = -1;
-			Artist = string.Empty;
-			Lyrics = string.Empty;
-			Path = string.Empty;
-			Title = string.Empty;
+			this.Id = -1;
+			this.Artist = string.Empty;
+			this.Lyrics = string.Empty;
+			this.Path = string.Empty;
+			this.Title = string.Empty;
 		}
 
 		public Media(DataRow dr)
 		{
-			Id = int.Parse(dr["id"].ToString());
-			Artist = dr["artist"].ToString();
-			Lyrics = dr["lyrics"].ToString();
-			Path = dr["path"].ToString();
-			Title = dr["title"].ToString();
+			this.Id = int.Parse(dr["id"].ToString());
+			this.Artist = dr["artist"].ToString();
+			this.Lyrics = dr["lyrics"].ToString();
+			this.Path = dr["path"].ToString();
+			this.Title = dr["title"].ToString();
 		}
 
 		public int Id { get; set; }
@@ -35,11 +35,11 @@ namespace Jukebox.NET.Common
 		public void ToRow(ref DataRow dr)
 		{
 			if (Id != -1)
-				dr["id"] = Id.ToString();
-			dr["artist"] = Artist;
-			dr["lyrics"] = Lyrics;
-			dr["path"] = Path;
-			dr["title"] = Title;
+				dr["id"] = this.Id.ToString();
+			dr["artist"] = this.Artist;
+			dr["lyrics"] = this.Lyrics;
+			dr["path"] = this.Path;
+			dr["title"] = this.Title;
 		}
 
 		#region Overrided methods

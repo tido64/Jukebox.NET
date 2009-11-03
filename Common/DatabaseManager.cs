@@ -97,7 +97,7 @@ namespace Jukebox.NET.Common
 			get
 			{
 				if (this.db_dataset == null)
-					Load();
+					this.Load();
 				return this.db_dataset;
 			}
 		}
@@ -140,7 +140,8 @@ namespace Jukebox.NET.Common
 					}
 					this.sql_adapter.Fill(this.db_dataset);
 				}
-				this.db_dataset.Tables[0].PrimaryKey = new DataColumn[]{ this.db_dataset.Tables[0].Columns[Media.PrimaryKey] };
+				this.db_dataset.EnforceConstraints = false;
+				this.db_dataset.Tables[0].PrimaryKey = new DataColumn[] { this.db_dataset.Tables[0].Columns[Media.PrimaryKey] };
 			}
 		}
 	}
