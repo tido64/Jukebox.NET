@@ -71,7 +71,7 @@ namespace Jukebox.NET.Manager
 			catch
 			{
 				TextWriter tw = File.CreateText("search.pattern");
-				this.filter = "*.cdg;*.mkv;*.ogm;*.vob";
+				this.filter = "*.mkv;*.mp3;*.ogm;*.vob";
 				tw.Write(this.filter);
 				this.textBox_filter.Text = this.filter;
 				tw.Close();
@@ -122,16 +122,16 @@ namespace Jukebox.NET.Manager
 		private void Load(object sender, RoutedEventArgs e)
         {
 			if (this.textBox_filter.Text == string.Empty)
-				LoadFilter();
+				this.LoadFilter();
 			if (DatabaseManager.Instance.DataSet.Tables[0].Rows.Count == 0)
-				Scan(sender, e);
+			    this.Scan(sender, e);
 			this.DataContext = DatabaseManager.Instance.DataSet.Tables[0].DefaultView;
-        }
+		}
 
 		private void Refresh(object sender, RoutedEventArgs e)
 		{
 			DatabaseManager.Instance.Load();
-			Load(sender, e);
+			this.Load(sender, e);
 		}
 
 		/// <summary>
@@ -142,10 +142,7 @@ namespace Jukebox.NET.Manager
 		private void Save(object sender, RoutedEventArgs e)
 		{
 			if (!DatabaseManager.Instance.DataSet.HasChanges())
-			{
-				//System.Windows.Forms.VisualStyles.VisualStyleElement.Window.Dialog.Normal.
 				return;
-			}
 
 			// Identify any new/modified rows and automatically rename files.
 			foreach (DataRow dr in DatabaseManager.Instance.DataSet.Tables[0].Rows)
@@ -153,6 +150,9 @@ namespace Jukebox.NET.Manager
 				if (dr.RowState == DataRowState.Modified)
 				{
 					string path = dr["path"].ToString();
+					if (!File.Exists(path))
+						return;
+
 					string filename = Path.GetFileNameWithoutExtension(path);
 					string newPath = string.Empty;
 
@@ -177,7 +177,7 @@ namespace Jukebox.NET.Manager
 				MessageBox.Show(DatabaseManager.Instance.LastMessage, "An error has occured while updating the database", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			else
 				MessageBox.Show("Committed " + rows.ToString() + " rows.", "Database updated", MessageBoxButton.OK, MessageBoxImage.Information);
-			Refresh(sender, e);
+			this.Refresh(sender, e);
 		}
 
 		private void Scan(object sender, RoutedEventArgs e)
@@ -190,8 +190,8 @@ namespace Jukebox.NET.Manager
 			if (dr != System.Windows.Forms.DialogResult.OK)
 				return;
 
-			IList<Media> media = new List<Media>();
-			Scan(media, fbd.SelectedPath);
+			List<Media> media = new List<Media>();
+			this.Scan(media, fbd.SelectedPath);
 			DatabaseManager.Instance.DataSet.Tables[0].BeginLoadData();
 			foreach (Media m in media)
 			{
