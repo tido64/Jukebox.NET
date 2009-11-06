@@ -1,10 +1,12 @@
-// Resources: http://msdn.microsoft.com/en-us/library/bb387004.aspx
-
 using System.Data;
 using System.Data.SQLite;
 
 namespace Jukebox.NET.Common
 {
+	/// <summary>
+	/// DatabaseManager handles all interaction between the application and the database.
+	/// </summary>
+	/// <remarks>http://msdn.microsoft.com/en-us/library/bb387004.aspx</remarks>
 	public sealed class DatabaseManager
 	{
 		public const int IdOffset = 999;
@@ -13,10 +15,10 @@ namespace Jukebox.NET.Common
 
 		private static readonly DatabaseManager instance = new DatabaseManager();
 
-		private object db_lock;
-		private string db_last_msg;
 		private const string sql_conn_str = "Data Source=media.sdb;Version=3;Compress=True;";
 		private const string sql_adapter_str = "SELECT * FROM [media]";
+
+		private string db_last_msg;
 		private DataSet db_dataset;
 		private SQLiteDataAdapter sql_adapter;
 		private SQLiteConnection sql_conn;
@@ -28,7 +30,6 @@ namespace Jukebox.NET.Common
 		private DatabaseManager()
 		{
 			this.db_last_msg = string.Empty;
-			this.db_lock = 0;
 			this.sql_conn = new SQLiteConnection(sql_conn_str);
 			this.sql_adapter = new SQLiteDataAdapter(sql_adapter_str, this.sql_conn);
 			this.sql_adapter.ContinueUpdateOnError = true; // Ignore errors on failed row update
@@ -74,7 +75,7 @@ namespace Jukebox.NET.Common
 		public int Commit()
 		{
 			int rows = 0;
-			lock (this.db_lock)
+			lock (this.sql_adapter)
 			{
 				try
 				{
@@ -119,7 +120,7 @@ namespace Jukebox.NET.Common
 		/// </summary>
 		public void Load()
 		{
-			lock (this.db_lock)
+			lock (this.sql_adapter)
 			{
 				if (this.db_dataset != null)
 					this.db_dataset.Dispose();

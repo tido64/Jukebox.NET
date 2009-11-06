@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Jukebox.NET.Common</RootNamespace>
-    <AssemblyName>Jukebox.NET.Common</AssemblyName>
+    <AssemblyName>jukebox</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>

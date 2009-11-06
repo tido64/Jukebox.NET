@@ -5,76 +5,49 @@ namespace Jukebox.NET.Client
 {
 	public partial class SettingsForm : Form
 	{
-		private OpenFileDialog openFileDialog = null;
-
 		public SettingsForm()
 		{
 			InitializeComponent();
 
 			this.comboBox_mediaplayer.Items.AddRange(MediaPlayer.MediaPlayerFactory.Players.ToArray());
 			this.comboBox_mediaplayer.SelectedIndex = MediaPlayer.MediaPlayerFactory.Players.BinarySearch(Properties.Settings.Default.MediaPlayer);
-			this.numericUpDown_media.Value = Properties.Settings.Default.MediaDisplayLifeSpan / 1000;
-			this.numericUpDown_request.Value = Properties.Settings.Default.RequestDisplayLifeSpan / 1000;
-
-			this.comboBox_mediaplayer.SelectedIndexChanged += new EventHandler(MediaPlayerChanged);
-			this.numericUpDown_media.ValueChanged += new EventHandler(MediaDisplayLifeChanged);
-			this.numericUpDown_request.ValueChanged += new EventHandler(RequestDisplayLifeChanged);
-			this.textBox_path.TextChanged += new EventHandler(PathChanged);
-
-			this.CenterToScreen();
+			this.numericUpDown_font.Value = (decimal)Properties.Settings.Default.FontSize;
+			this.numericUpDown_interval.Value = Properties.Settings.Default.Interval / 1000;
+			this.numericUpDown_media.Value = Properties.Settings.Default.TimeToDisplayMedia / 1000;
+			this.numericUpDown_request.Value = Properties.Settings.Default.TimeToDisplayRequest / 1000;
 		}
 
 		#region Button handlers
 
 		private void button_browse_Click(object sender, EventArgs e)
 		{
-			if (this.openFileDialog == null)
+			using (OpenFileDialog ofd = new OpenFileDialog())
 			{
-				this.openFileDialog = new OpenFileDialog();
-				this.openFileDialog.CheckFileExists = true;
-				this.openFileDialog.CheckPathExists = true;
-				this.openFileDialog.Filter = "Executable files (*.exe)|*.exe";
-				this.openFileDialog.Multiselect = false;
+				ofd.CheckFileExists = true;
+				ofd.CheckPathExists = true;
+				ofd.Filter = "Executable files (*.exe)|*.exe";
+				ofd.Multiselect = false;
+				ofd.Title = "Select path for " + this.comboBox_mediaplayer.SelectedItem.ToString() + ":";
+				if (ofd.ShowDialog() == DialogResult.OK)
+					this.textBox_path.Text = ofd.FileName;
 			}
-			this.openFileDialog.Title = "Select path for " + this.comboBox_mediaplayer.SelectedItem.ToString() + ":";
-			if (this.openFileDialog.ShowDialog() == DialogResult.OK)
-				this.textBox_path.Text = this.openFileDialog.FileName;
 		}
 
 		private void button_cancel_Click(object sender, EventArgs e)
 		{
-			Dispose();
+			this.Dispose();
 		}
 
 		private void button_save_Click(object sender, EventArgs e)
 		{
-			Properties.Settings.Default.Save();
-			Properties.Settings.Default.Reload();
-			Dispose();
-		}
-
-		#endregion
-
-		#region Change events
-
-		private void MediaPlayerChanged(object sender, EventArgs e)
-		{
+			Properties.Settings.Default.FontSize = (float)this.numericUpDown_font.Value;
+			Properties.Settings.Default.Interval = (int)this.numericUpDown_interval.Value * 1000;
 			Properties.Settings.Default.MediaPlayer = this.comboBox_mediaplayer.SelectedItem.ToString();
-		}
-
-		private void MediaDisplayLifeChanged(object sender, EventArgs e)
-		{
-			Properties.Settings.Default.MediaDisplayLifeSpan = int.Parse(this.numericUpDown_media.Value.ToString()) * 1000;
-		}
-
-		private void PathChanged(object sender, EventArgs e)
-		{
 			Properties.Settings.Default.PathToExe = this.textBox_path.Text;
-		}
-
-		private void RequestDisplayLifeChanged(object sender, EventArgs e)
-		{
-			Properties.Settings.Default.RequestDisplayLifeSpan = int.Parse(this.numericUpDown_request.Value.ToString()) * 1000;
+			Properties.Settings.Default.TimeToDisplayMedia = (int)this.numericUpDown_media.Value * 1000;
+			Properties.Settings.Default.TimeToDisplayRequest = (int)this.numericUpDown_request.Value * 1000;
+			Properties.Settings.Default.Save();
+			this.Dispose();
 		}
 
 		#endregion

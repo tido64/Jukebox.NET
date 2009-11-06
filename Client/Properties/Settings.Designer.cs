@@ -58,28 +58,55 @@ namespace Jukebox.NET.Client.Properties {
                 this["PathToExe"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
+
+		[global::System.Configuration.UserScopedSettingAttribute()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		[global::System.Configuration.DefaultSettingValueAttribute("60000")]
+		public int Interval
+		{
+			get
+			{
+				return ((int)(this["Interval"]));
+			}
+			set
+			{
+				this["Interval"] = value;
+			}
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("15000")]
-        public int MediaDisplayLifeSpan {
+        public int TimeToDisplayMedia {
             get {
-                return ((int)(this["MediaDisplayLifeSpan"]));
+                return ((int)(this["TimeToDisplayMedia"]));
             }
             set {
-                this["MediaDisplayLifeSpan"] = value;
+                this["TimeToDisplayMedia"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("5000")]
-        public int RequestDisplayLifeSpan {
+        public int TimeToDisplayRequest {
             get {
-                return ((int)(this["RequestDisplayLifeSpan"]));
+                return ((int)(this["TimeToDisplayRequest"]));
             }
             set {
-                this["RequestDisplayLifeSpan"] = value;
+                this["TimeToDisplayRequest"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public float FontSize {
+            get {
+                return ((float)(this["FontSize"]));
+            }
+            set {
+                this["FontSize"] = value;
             }
         }
     }

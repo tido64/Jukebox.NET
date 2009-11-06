@@ -1,8 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
 
 using Jukebox.NET.Client.MediaPlayer;
@@ -17,31 +15,26 @@ namespace Jukebox.NET.Client
 	/// </summary>
 	/// <remarks>
 	/// TODO:
-	/// - Dual-monitor support + OSD mover
 	/// - When playlist is exhausted, randomly add new songs to play until input
-	///
-	/// Lower priority:
 	/// - Show the next two or three
 	/// - Show requester (log in candy)
-	/// - Font size in config
+	///
+	/// Lower priority:
 	/// - CD+G on max two lines, using pictures as background
 	/// </remarks>
 	class Tray : IDisposable
 	{
-
 		private const string startMediaPlayer = "Start media player";
 		private AbstractMediaPlayer mediaPlayer = null;
+		private ContextMenu trayMenu;
+		private NotifyIcon trayIcon;
 		private OnScreenDisplay osd = null;
 
 		public Tray()
 		{
-			#region Initialize component
+			#region Initialize components
 
 			ComponentResourceManager resources = new ComponentResourceManager(typeof(Properties.Resources));
-
-			this.trayIcon = new NotifyIcon();
-			this.trayIcon.Text = Application.ProductName + " v" + Application.ProductVersion;
-			this.trayIcon.Icon = ((Icon)(resources.GetObject("stock_music_library")));
 
 			this.trayMenu = new ContextMenu();
 			this.trayMenu.MenuItems.Add(startMediaPlayer, Restart);
@@ -49,6 +42,9 @@ namespace Jukebox.NET.Client
 			this.trayMenu.MenuItems.Add("-");
 			this.trayMenu.MenuItems.Add("Exit", Exit);
 
+			this.trayIcon = new NotifyIcon();
+			this.trayIcon.Text = Application.ProductName + " v" + Application.ProductVersion;
+			this.trayIcon.Icon = ((Icon)(resources.GetObject("stock_music_library")));
 			this.trayIcon.ContextMenu = this.trayMenu;
 			this.trayIcon.Visible = true;
 
@@ -66,7 +62,7 @@ namespace Jukebox.NET.Client
 
 		private void Exit(object sender, EventArgs e)
 		{
-			Dispose();
+			this.Dispose();
 			Application.Exit();
 		}
 
@@ -75,7 +71,7 @@ namespace Jukebox.NET.Client
 			this.trayMenu.MenuItems[0].Enabled = false;
 			this.trayMenu.MenuItems[0].Text = "Starting " + Properties.Settings.Default.MediaPlayer + "...";
 
-			if (mediaPlayer == null)
+			if (this.mediaPlayer == null)
 				Start();
 			else
 				this.mediaPlayer.Restart();
@@ -96,8 +92,11 @@ namespace Jukebox.NET.Client
 			}
 			catch (Exception e)
 			{
-				MessageBox.Show(Properties.Settings.Default.MediaPlayer + " could not be started. Please verify your configuration and try again." + Program.endl + Program.endl + "Exception: " + e.ToString(),
-					"Failed to start media player", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+				MessageBox.Show(Properties.Settings.Default.MediaPlayer
+					+ " could not be started. Please verify your configuration and try again." + Program.endl + Program.endl + "Exception: " + e.ToString(),
+					"Failed to start media player",
+					MessageBoxButtons.OK,
+					MessageBoxIcon.Warning);
 			}
 			if (this.mediaPlayer == null)
 				return;
@@ -118,8 +117,5 @@ namespace Jukebox.NET.Client
 		}
 
 		#endregion
-
-		private ContextMenu trayMenu;
-		private NotifyIcon trayIcon;
 	}
 }

@@ -11,11 +11,17 @@
     <Setting Name="PathToExe" Type="System.String" Scope="User">
       <Value Profile="(Default)">mplayer.exe</Value>
     </Setting>
-    <Setting Name="MediaDisplayLifeSpan" Type="System.Int32" Scope="User">
+    <Setting Name="Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60000</Value>
+    </Setting>
+    <Setting Name="TimeToDisplayMedia" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">15000</Value>
     </Setting>
-    <Setting Name="RequestDisplayLifeSpan" Type="System.Int32" Scope="User">
+    <Setting Name="TimeToDisplayRequest" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">5000</Value>
+    </Setting>
+    <Setting Name="FontSize" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">30</Value>
     </Setting>
   </Settings>
 </SettingsFile>

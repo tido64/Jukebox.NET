@@ -35,23 +35,22 @@
 			// OSDtext
 			// 
 			this.TextDisplay.AutoSize = true;
-			this.TextDisplay.Font = new System.Drawing.Font("Verdana", 26F, System.Drawing.FontStyle.Bold);
+			this.TextDisplay.Font = new System.Drawing.Font("Segoe UI", Properties.Settings.Default.FontSize, System.Drawing.FontStyle.Bold);
 			this.TextDisplay.ForeColor = System.Drawing.Color.White;
-			this.TextDisplay.Location = new System.Drawing.Point(12, 9);
 			this.TextDisplay.Name = "OSDtext";
-			this.TextDisplay.Size = new System.Drawing.Size(220, 42);
+			this.TextDisplay.Padding = new System.Windows.Forms.Padding(5);
 			this.TextDisplay.TabIndex = 0;
 			// 
 			// OSD
 			// 
 			this.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoSize = true;
 			this.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
 			this.BackColor = System.Drawing.Color.Black;
 			this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
 			this.CausesValidation = false;
-			this.ClientSize = new System.Drawing.Size(Monitor.Width, 64);
+			this.ClientSize = new System.Drawing.Size(Monitor.Width, 0);
 			this.ControlBox = false;
 			this.Controls.Add(this.TextDisplay);
 			this.DoubleBuffered = true;

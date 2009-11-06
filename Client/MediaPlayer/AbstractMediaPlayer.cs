@@ -9,24 +9,14 @@ namespace Jukebox.NET.Client.MediaPlayer
 	{
 		public abstract event TrackChange TrackChange;
 
-		private string name;
-		private string shortName;
-
 		public AbstractMediaPlayer(string name, string shortName)
 		{
-			this.name = name;
-			this.shortName = shortName;
+			this.Name = name;
+			this.ShortName = shortName;
 		}
 
-		public string Name
-		{
-			get { return name; }
-		}
-
-		public string ShortName
-		{
-			get { return shortName; }
-		}
+		public string Name { get; private set; }
+		public string ShortName { get; private set; }
 
 		public abstract Media CurrentlyPlaying { get; }
 		public abstract bool IsPaused { get; }

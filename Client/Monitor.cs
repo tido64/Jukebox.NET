@@ -12,10 +12,7 @@ namespace Jukebox.NET.Client
 		/// </summary>
 		public static int Count
 		{
-			get
-			{
-				return Screen.AllScreens.Length;
-			}
+			get { return Screen.AllScreens.Length; }
 		}
 
 		/// <summary>
