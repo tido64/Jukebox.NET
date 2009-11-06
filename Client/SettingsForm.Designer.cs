@@ -32,20 +32,30 @@
 			this.comboBox_mediaplayer = new System.Windows.Forms.ComboBox();
 			this.groupBox_startup = new System.Windows.Forms.GroupBox();
 			this.button_browse = new System.Windows.Forms.Button();
-			this.label_path = new System.Windows.Forms.Label();
-			this.groupBox_osd = new System.Windows.Forms.GroupBox();
-			this.numericUpDown_request = new System.Windows.Forms.NumericUpDown();
-			this.numericUpDown_media = new System.Windows.Forms.NumericUpDown();
-			this.label_request = new System.Windows.Forms.Label();
-			this.label_next = new System.Windows.Forms.Label();
-			this.button_cancel = new System.Windows.Forms.Button();
-			this.button_save = new System.Windows.Forms.Button();
 			this.textBox_path = new System.Windows.Forms.TextBox();
 			this.checkBox_autostart = new System.Windows.Forms.CheckBox();
+			this.label_path = new System.Windows.Forms.Label();
+			this.groupBox_osd = new System.Windows.Forms.GroupBox();
+			this.numericUpDown_font = new System.Windows.Forms.NumericUpDown();
+			this.numericUpDown_interval = new System.Windows.Forms.NumericUpDown();
+			this.numericUpDown_media = new System.Windows.Forms.NumericUpDown();
+			this.numericUpDown_request = new System.Windows.Forms.NumericUpDown();
+			this.label_font = new System.Windows.Forms.Label();
+			this.label_interval = new System.Windows.Forms.Label();
+			this.label_next = new System.Windows.Forms.Label();
+			this.label_request = new System.Windows.Forms.Label();
+			this.button_cancel = new System.Windows.Forms.Button();
+			this.button_save = new System.Windows.Forms.Button();
+			this.flowLayoutPanel_main = new System.Windows.Forms.FlowLayoutPanel();
+			this.flowLayoutPanel_control = new System.Windows.Forms.FlowLayoutPanel();
 			this.groupBox_startup.SuspendLayout();
 			this.groupBox_osd.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_request)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_font)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_interval)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_media)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_request)).BeginInit();
+			this.flowLayoutPanel_main.SuspendLayout();
+			this.flowLayoutPanel_control.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// label_mediaplayer
@@ -72,16 +82,16 @@
 			// 
 			// groupBox_startup
 			// 
-			this.groupBox_startup.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.groupBox_startup.AutoSize = true;
 			this.groupBox_startup.Controls.Add(this.button_browse);
 			this.groupBox_startup.Controls.Add(this.textBox_path);
 			this.groupBox_startup.Controls.Add(this.comboBox_mediaplayer);
 			this.groupBox_startup.Controls.Add(this.checkBox_autostart);
 			this.groupBox_startup.Controls.Add(this.label_path);
 			this.groupBox_startup.Controls.Add(this.label_mediaplayer);
-			this.groupBox_startup.Location = new System.Drawing.Point(12, 12);
+			this.groupBox_startup.Location = new System.Drawing.Point(3, 3);
 			this.groupBox_startup.Name = "groupBox_startup";
-			this.groupBox_startup.Size = new System.Drawing.Size(387, 100);
+			this.groupBox_startup.Size = new System.Drawing.Size(387, 112);
 			this.groupBox_startup.TabIndex = 4;
 			this.groupBox_startup.TabStop = false;
 			this.groupBox_startup.Text = "Startup";
@@ -95,91 +105,6 @@
 			this.button_browse.Text = "Browse...";
 			this.button_browse.UseVisualStyleBackColor = true;
 			this.button_browse.Click += new System.EventHandler(this.button_browse_Click);
-			// 
-			// label_path
-			// 
-			this.label_path.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)));
-			this.label_path.AutoSize = true;
-			this.label_path.Location = new System.Drawing.Point(6, 52);
-			this.label_path.Name = "label_path";
-			this.label_path.Size = new System.Drawing.Size(32, 13);
-			this.label_path.TabIndex = 0;
-			this.label_path.Text = "Path:";
-			this.label_path.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// groupBox_osd
-			// 
-			this.groupBox_osd.Controls.Add(this.numericUpDown_request);
-			this.groupBox_osd.Controls.Add(this.numericUpDown_media);
-			this.groupBox_osd.Controls.Add(this.label_request);
-			this.groupBox_osd.Controls.Add(this.label_next);
-			this.groupBox_osd.Location = new System.Drawing.Point(12, 119);
-			this.groupBox_osd.Name = "groupBox_osd";
-			this.groupBox_osd.Size = new System.Drawing.Size(387, 79);
-			this.groupBox_osd.TabIndex = 5;
-			this.groupBox_osd.TabStop = false;
-			this.groupBox_osd.Text = "OSD";
-			// 
-			// numericUpDown_request
-			// 
-			this.numericUpDown_request.Location = new System.Drawing.Point(209, 45);
-			this.numericUpDown_request.Name = "numericUpDown_request";
-			this.numericUpDown_request.Size = new System.Drawing.Size(64, 20);
-			this.numericUpDown_request.TabIndex = 0;
-			// 
-			// numericUpDown_media
-			// 
-			this.numericUpDown_media.Location = new System.Drawing.Point(216, 19);
-			this.numericUpDown_media.Name = "numericUpDown_media";
-			this.numericUpDown_media.Size = new System.Drawing.Size(64, 20);
-			this.numericUpDown_media.TabIndex = 0;
-			// 
-			// label_request
-			// 
-			this.label_request.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)));
-			this.label_request.AutoSize = true;
-			this.label_request.Location = new System.Drawing.Point(6, 47);
-			this.label_request.Name = "label_request";
-			this.label_request.Size = new System.Drawing.Size(319, 13);
-			this.label_request.TabIndex = 0;
-			this.label_request.Text = "Requested media should be displayed for                         seconds.";
-			this.label_request.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// label_next
-			// 
-			this.label_next.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)));
-			this.label_next.AutoSize = true;
-			this.label_next.Location = new System.Drawing.Point(6, 21);
-			this.label_next.Name = "label_next";
-			this.label_next.Size = new System.Drawing.Size(326, 13);
-			this.label_next.TabIndex = 0;
-			this.label_next.Text = "Current/next media should be displayed for                         seconds.";
-			this.label_next.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// button_cancel
-			// 
-			this.button_cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.button_cancel.Location = new System.Drawing.Point(318, 204);
-			this.button_cancel.Name = "button_cancel";
-			this.button_cancel.Size = new System.Drawing.Size(75, 23);
-			this.button_cancel.TabIndex = 6;
-			this.button_cancel.Text = "Cancel";
-			this.button_cancel.UseVisualStyleBackColor = true;
-			this.button_cancel.Click += new System.EventHandler(this.button_cancel_Click);
-			// 
-			// button_save
-			// 
-			this.button_save.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.button_save.Location = new System.Drawing.Point(237, 204);
-			this.button_save.Name = "button_save";
-			this.button_save.Size = new System.Drawing.Size(75, 23);
-			this.button_save.TabIndex = 6;
-			this.button_save.Text = "Save";
-			this.button_save.UseVisualStyleBackColor = true;
-			this.button_save.Click += new System.EventHandler(this.button_save_Click);
 			// 
 			// textBox_path
 			// 
@@ -203,29 +128,186 @@
 			this.checkBox_autostart.Text = "Autostart";
 			this.checkBox_autostart.UseVisualStyleBackColor = true;
 			// 
+			// label_path
+			// 
+			this.label_path.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)));
+			this.label_path.AutoSize = true;
+			this.label_path.Location = new System.Drawing.Point(6, 52);
+			this.label_path.Name = "label_path";
+			this.label_path.Size = new System.Drawing.Size(32, 13);
+			this.label_path.TabIndex = 0;
+			this.label_path.Text = "Path:";
+			this.label_path.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// groupBox_osd
+			// 
+			this.groupBox_osd.AutoSize = true;
+			this.groupBox_osd.Controls.Add(this.numericUpDown_font);
+			this.groupBox_osd.Controls.Add(this.numericUpDown_interval);
+			this.groupBox_osd.Controls.Add(this.numericUpDown_media);
+			this.groupBox_osd.Controls.Add(this.numericUpDown_request);
+			this.groupBox_osd.Controls.Add(this.label_font);
+			this.groupBox_osd.Controls.Add(this.label_interval);
+			this.groupBox_osd.Controls.Add(this.label_next);
+			this.groupBox_osd.Controls.Add(this.label_request);
+			this.groupBox_osd.Location = new System.Drawing.Point(3, 121);
+			this.groupBox_osd.Name = "groupBox_osd";
+			this.groupBox_osd.Size = new System.Drawing.Size(387, 95);
+			this.groupBox_osd.TabIndex = 5;
+			this.groupBox_osd.TabStop = false;
+			this.groupBox_osd.Text = "OSD";
+			// 
+			// numericUpDown_font
+			// 
+			this.numericUpDown_font.Location = new System.Drawing.Point(333, 14);
+			this.numericUpDown_font.Name = "numericUpDown_font";
+			this.numericUpDown_font.Size = new System.Drawing.Size(48, 20);
+			this.numericUpDown_font.TabIndex = 0;
+			// 
+			// numericUpDown_interval
+			// 
+			this.numericUpDown_interval.Location = new System.Drawing.Point(189, 14);
+			this.numericUpDown_interval.Name = "numericUpDown_interval";
+			this.numericUpDown_interval.Size = new System.Drawing.Size(48, 20);
+			this.numericUpDown_interval.TabIndex = 0;
+			// 
+			// numericUpDown_media
+			// 
+			this.numericUpDown_media.Location = new System.Drawing.Point(196, 35);
+			this.numericUpDown_media.Name = "numericUpDown_media";
+			this.numericUpDown_media.Size = new System.Drawing.Size(48, 20);
+			this.numericUpDown_media.TabIndex = 0;
+			// 
+			// numericUpDown_request
+			// 
+			this.numericUpDown_request.Location = new System.Drawing.Point(185, 56);
+			this.numericUpDown_request.Name = "numericUpDown_request";
+			this.numericUpDown_request.Size = new System.Drawing.Size(48, 20);
+			this.numericUpDown_request.TabIndex = 0;
+			// 
+			// label_font
+			// 
+			this.label_font.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)));
+			this.label_font.AutoSize = true;
+			this.label_font.Location = new System.Drawing.Point(275, 16);
+			this.label_font.Name = "label_font";
+			this.label_font.Size = new System.Drawing.Size(52, 13);
+			this.label_font.TabIndex = 0;
+			this.label_font.Text = "Font size:";
+			this.label_font.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// label_interval
+			// 
+			this.label_interval.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)));
+			this.label_interval.AutoSize = true;
+			this.label_interval.Location = new System.Drawing.Point(6, 16);
+			this.label_interval.Name = "label_interval";
+			this.label_interval.Size = new System.Drawing.Size(177, 13);
+			this.label_interval.TabIndex = 0;
+			this.label_interval.Text = "Seconds between each notification:";
+			this.label_interval.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// label_next
+			// 
+			this.label_next.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)));
+			this.label_next.AutoSize = true;
+			this.label_next.Location = new System.Drawing.Point(6, 37);
+			this.label_next.Name = "label_next";
+			this.label_next.Size = new System.Drawing.Size(184, 13);
+			this.label_next.TabIndex = 0;
+			this.label_next.Text = "Seconds to show current/next media:";
+			this.label_next.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// label_request
+			// 
+			this.label_request.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)));
+			this.label_request.AutoSize = true;
+			this.label_request.Location = new System.Drawing.Point(6, 58);
+			this.label_request.Name = "label_request";
+			this.label_request.Size = new System.Drawing.Size(173, 13);
+			this.label_request.TabIndex = 0;
+			this.label_request.Text = "Seconds to show requested media:";
+			this.label_request.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// button_cancel
+			// 
+			this.button_cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.button_cancel.Location = new System.Drawing.Point(84, 3);
+			this.button_cancel.Name = "button_cancel";
+			this.button_cancel.Size = new System.Drawing.Size(75, 23);
+			this.button_cancel.TabIndex = 6;
+			this.button_cancel.Text = "Cancel";
+			this.button_cancel.UseVisualStyleBackColor = true;
+			this.button_cancel.Click += new System.EventHandler(this.button_cancel_Click);
+			// 
+			// button_save
+			// 
+			this.button_save.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.button_save.Location = new System.Drawing.Point(3, 3);
+			this.button_save.Name = "button_save";
+			this.button_save.Size = new System.Drawing.Size(75, 23);
+			this.button_save.TabIndex = 6;
+			this.button_save.Text = "Save";
+			this.button_save.UseVisualStyleBackColor = true;
+			this.button_save.Click += new System.EventHandler(this.button_save_Click);
+			// 
+			// flowLayoutPanel_main
+			// 
+			this.flowLayoutPanel_main.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+			this.flowLayoutPanel_main.AutoSize = true;
+			this.flowLayoutPanel_main.Controls.Add(this.groupBox_startup);
+			this.flowLayoutPanel_main.Controls.Add(this.groupBox_osd);
+			this.flowLayoutPanel_main.Controls.Add(this.flowLayoutPanel_control);
+			this.flowLayoutPanel_main.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.flowLayoutPanel_main.Location = new System.Drawing.Point(5, 5);
+			this.flowLayoutPanel_main.Margin = new System.Windows.Forms.Padding(0);
+			this.flowLayoutPanel_main.Name = "flowLayoutPanel_main";
+			this.flowLayoutPanel_main.Size = new System.Drawing.Size(393, 254);
+			this.flowLayoutPanel_main.TabIndex = 7;
+			// 
+			// flowLayoutPanel_control
+			// 
+			this.flowLayoutPanel_control.AutoSize = true;
+			this.flowLayoutPanel_control.Controls.Add(this.button_save);
+			this.flowLayoutPanel_control.Controls.Add(this.button_cancel);
+			this.flowLayoutPanel_control.Location = new System.Drawing.Point(3, 222);
+			this.flowLayoutPanel_control.Name = "flowLayoutPanel_control";
+			this.flowLayoutPanel_control.Size = new System.Drawing.Size(162, 29);
+			this.flowLayoutPanel_control.TabIndex = 6;
+			// 
 			// SettingsForm
 			// 
 			this.AcceptButton = this.button_save;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoSize = true;
 			this.CancelButton = this.button_cancel;
-			this.ClientSize = new System.Drawing.Size(411, 236);
+			this.ClientSize = new System.Drawing.Size(403, 264);
 			this.ControlBox = false;
-			this.Controls.Add(this.button_save);
-			this.Controls.Add(this.button_cancel);
-			this.Controls.Add(this.groupBox_osd);
-			this.Controls.Add(this.groupBox_startup);
+			this.Controls.Add(this.flowLayoutPanel_main);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Name = "SettingsForm";
 			this.ShowInTaskbar = false;
-			this.Text = System.Windows.Forms.Application.ProductName + " settings";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+			this.Text = "Microsoft® Visual Studio® 2008 settings";
 			this.groupBox_startup.ResumeLayout(false);
 			this.groupBox_startup.PerformLayout();
 			this.groupBox_osd.ResumeLayout(false);
 			this.groupBox_osd.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_request)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_font)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_interval)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_media)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_request)).EndInit();
+			this.flowLayoutPanel_main.ResumeLayout(false);
+			this.flowLayoutPanel_main.PerformLayout();
+			this.flowLayoutPanel_control.ResumeLayout(false);
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -245,5 +327,11 @@
 		private System.Windows.Forms.NumericUpDown numericUpDown_request;
 		private System.Windows.Forms.Label label_request;
 		private System.Windows.Forms.Label label_path;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel_main;
+		private System.Windows.Forms.NumericUpDown numericUpDown_interval;
+		private System.Windows.Forms.Label label_font;
+		private System.Windows.Forms.Label label_interval;
+		private System.Windows.Forms.NumericUpDown numericUpDown_font;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel_control;
 	}
 }

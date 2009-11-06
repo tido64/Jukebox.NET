@@ -16,7 +16,6 @@ namespace Jukebox.NET.Client
 
 		// Settings
 		private const double maxOpacity = 0.8;
-		private const int nextDisplayDelay = 60000;
 		private const int speed = 30;
 
 		// Flags and timers
@@ -41,17 +40,17 @@ namespace Jukebox.NET.Client
 			CheckForIllegalCrossThreadCalls = false;
 
 			this.mediaPlayer = mp;
-			this.mediaPlayer.TrackChange += new TrackChange(ShowCurrent);
+			this.mediaPlayer.TrackChange += new TrackChange(this.ShowCurrent);
 
-			this.DisplayUp += new Display(FadeIn);
-			this.t_DisplayDown = new System.Threading.Timer(new TimerCallback(FadeOut), null, Timeout.Infinite, Timeout.Infinite);
+			this.DisplayUp += new Display(this.FadeIn);
+			this.t_DisplayDown = new System.Threading.Timer(new TimerCallback(this.FadeOut), null, Timeout.Infinite, Timeout.Infinite);
 			this.Opacity = 0;
 			this.TextDisplay.Text = this.version;
 			this.Visible = true;
 
 			this.hotkeys = new HotKeys(this.Handle);
 
-			DisplayUp();
+			this.DisplayUp();
 		}
 
 		#region Display animation
@@ -78,7 +77,7 @@ namespace Jukebox.NET.Client
 			{
 				this.TextDisplay.Text = this.next;
 				this.next = string.Empty;
-				this.t_DisplayDown.Change(Properties.Settings.Default.MediaDisplayLifeSpan, Timeout.Infinite);
+				this.t_DisplayDown.Change(Properties.Settings.Default.TimeToDisplayMedia, Timeout.Infinite);
 			}
 			else
 			{
@@ -101,8 +100,8 @@ namespace Jukebox.NET.Client
 		private void Show(string s)
 		{
 			this.TextDisplay.Text = s;
-			DisplayUp();
-			this.t_DisplayDown.Change(Properties.Settings.Default.MediaDisplayLifeSpan, Timeout.Infinite);
+			this.DisplayUp();
+			this.t_DisplayDown.Change(Properties.Settings.Default.TimeToDisplayMedia, Timeout.Infinite);
 		}
 
 		private void ShowCurrent(Media m)
@@ -111,15 +110,16 @@ namespace Jukebox.NET.Client
 				return;
 
 			int id = m.Id + DatabaseManager.IdOffset;
-			Show("Now: " + id.ToString() + ". " + m.ToString());
-			ShowNext(null);
+			this.Show("Now: " + id.ToString() + ". " + m.ToString());
+			this.ShowNext(null);
 		}
 
 		private void ShowNext(object state)
 		{
-			this.t_DisplayNext = new System.Threading.Timer(new TimerCallback(ShowNext),
+			this.t_DisplayNext = new System.Threading.Timer(
+				new TimerCallback(this.ShowNext),
 				null,
-				nextDisplayDelay,
+				Properties.Settings.Default.Interval,
 				Timeout.Infinite);
 
 			// Check to see if we're at the bottom of the playlist
@@ -131,7 +131,7 @@ namespace Jukebox.NET.Client
 			if (this.showing)
 				this.next = next;
 			else
-				Show(next);
+				this.Show(next);
 		}
 
 		/// <summary>
@@ -155,13 +155,13 @@ namespace Jukebox.NET.Client
 			{
 				this.TextDisplay.Text += " (?)";
 			}
-			DisplayUp();
+			this.DisplayUp();
 		}
 
 		private void ShowRequest(string choice)
 		{
 			this.TextDisplay.Text = "+ " + choice;
-			this.t_DisplayDown.Change(Properties.Settings.Default.RequestDisplayLifeSpan, Timeout.Infinite);
+			this.t_DisplayDown.Change(Properties.Settings.Default.TimeToDisplayRequest, Timeout.Infinite);
 		}
 
 		#endregion

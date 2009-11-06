@@ -33,20 +33,19 @@ namespace Jukebox.NET.Client.MediaPlayer
 
 		#endregion
 
-		readonly string arguments;
-		bool filling, paused, playing;
-		int playlist_ptr;
-		EventHandler mp_event;
-		Form mp_window;
-		List<Media> playlist;
-		Panel mp_panel;
-		Process mplayer;
+		private readonly string arguments;
+		private bool filling, paused, playing;
+		private int playlist_ptr;
+		private EventHandler mp_event;
+		private Form mp_window;
+		private List<Media> playlist;
+		private Panel mp_panel;
+		private Process mplayer;
 
 		public MPlayer() : base("MPlayer", "mplayer")
 		{
-			this.mp_event = new EventHandler(mplayer_Exited);
-
 			#region Initialize window
+
 			this.mp_panel = new Panel();
 			this.mp_panel.Dock = DockStyle.Fill;
 			this.mp_window = new Form();
@@ -65,9 +64,12 @@ namespace Jukebox.NET.Client.MediaPlayer
 			this.mp_window.TopMost = false;
 			this.mp_window.Controls.Add(this.mp_panel);
 			this.mp_window.ResumeLayout(false);
+			this.mp_window.StartPosition = FormStartPosition.Manual;
 			this.mp_window.Show();
+
 			#endregion
 
+			this.mp_event = new EventHandler(mplayer_Exited);
 			this.mplayer = new Process();
 			this.mplayer.EnableRaisingEvents = true;
 			this.mplayer.Exited += this.mp_event;
@@ -81,7 +83,7 @@ namespace Jukebox.NET.Client.MediaPlayer
 			this.playlist = new List<Media>();
 		}
 
-		void mplayer_Exited(object sender, EventArgs e)
+		private void mplayer_Exited(object sender, EventArgs e)
 		{
 			this.playing = false;
 			this.playlist_ptr++;
@@ -93,12 +95,14 @@ namespace Jukebox.NET.Client.MediaPlayer
 			this.Play();
 		}
 
-		void Command(string cmd)
+		private void Command(string cmd)
 		{
+			if (!this.playing)
+				return;
 			this.mplayer.StandardInput.Write(cmd + "\n");
 		}
 
-		void Play()
+		private void Play()
 		{
 			string audio = string.Empty;
 			string media = this.playlist[this.playlist_ptr].Path.ToLower();
@@ -107,7 +111,6 @@ namespace Jukebox.NET.Client.MediaPlayer
 
 			this.mplayer.StartInfo.Arguments = this.arguments + audio + " \"" + this.playlist[this.playlist_ptr].Path + "\"";
 			this.mplayer.Start();
-			this.playing = true;
 			do
 			{
 				this.mplayer.Refresh();
@@ -115,15 +118,16 @@ namespace Jukebox.NET.Client.MediaPlayer
 			SetWindowPos(this.mplayer.MainWindowHandle, HWND_BOTTOM, 0, 0, 0, 0, SWP_ASSASSINATE);
 			SetForegroundWindow(this.mp_window.Handle);
 
+			this.playing = true;
 			TrackChange(this.CurrentlyPlaying);
 
 			if (media.Contains("track 1"))
 				this.CycleAudioTracks();
-			if (this.CurrentlyPlaying.RequestedBy != null)
-			{
-				this.Command("osd 1");
-				this.Command("osd_show_text \"Performed by: " + this.CurrentlyPlaying.RequestedBy + "\" 600000 1");
-			}
+			//if (this.CurrentlyPlaying.RequestedBy != null)
+			//{
+			//    this.Command("osd 1");
+			//    this.Command("osd_show_text \"Performed by: " + this.CurrentlyPlaying.RequestedBy + "\" 600000 1");
+			//}
 		}
 
 		#region AbstractMediaPlayer members
@@ -176,8 +180,6 @@ namespace Jukebox.NET.Client.MediaPlayer
 
 		public override void Pause()
 		{
-			if (!this.playing)
-				return;
 			this.Command("pause");
 			this.paused ^= true;
 		}

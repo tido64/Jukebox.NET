@@ -1,6 +1,4 @@
-﻿// http://msdn.microsoft.com/en-us/library/aa970683.aspx
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -13,6 +11,7 @@ namespace Jukebox.NET.Manager
 	/// <summary>
 	/// Interaction logic for Manager.xaml
 	/// </summary>
+	/// <remarks>http://msdn.microsoft.com/en-us/library/aa970683.aspx</remarks>
 	public partial class Manager : Window
 	{
 		#region Code-behind
@@ -38,27 +37,8 @@ namespace Jukebox.NET.Manager
 		}
 
 		/// <summary>
-		/// Parses file for artist and title string.
+		/// Loads filter patterns. Creates the file if it doesn't exist.
 		/// </summary>
-		/// <param name="filepath">Path to the file to parse</param>
-		/// <returns>A media object representing the file</returns>
-		private Media Parse(string filePath)
-		{
-			string filename = Path.GetFileNameWithoutExtension(filePath);
-			string[] names = filename.Split(this.separators, StringSplitOptions.RemoveEmptyEntries);
-
-			Media m = new Media();
-			m.Path = filePath;
-			if (names.Length < 2)
-				m.Title = filename;
-			else
-			{
-				m.Title = names[0].Trim();
-				m.Artist = names[1].Trim();
-			}
-			return m;
-		}
-
 		private void LoadFilter()
 		{
 			try
@@ -76,6 +56,30 @@ namespace Jukebox.NET.Manager
 				this.textBox_filter.Text = this.filter;
 				tw.Close();
 			}
+		}
+
+		/// <summary>
+		/// Parses file for artist and title string.
+		/// </summary>
+		/// <param name="filepath">Path to the file to parse</param>
+		/// <returns>A media object representing the file</returns>
+		private Media Parse(string filePath)
+		{
+			string filename = Path.GetFileNameWithoutExtension(filePath);
+			string[] names = filename.Split(this.separators, StringSplitOptions.RemoveEmptyEntries);
+
+			Media m = new Media();
+			m.Path = filePath;
+			if (names.Length < 2)
+				m.Title = filename;
+			else
+			{
+				m.Title = names[0].Trim();
+				m.Artist = names[1].Trim();
+				for (int i = 2; i < names.Length; i++)
+					m.Artist += separators[0] + names[i].Trim();
+			}
+			return m;
 		}
 
 		/// <summary>
@@ -99,11 +103,13 @@ namespace Jukebox.NET.Manager
 			if (DatabaseManager.Instance.DataSet.HasChanges())
 			{
 				MessageBox.Show("The database contains changes. Please save or undo them in order to perform an export.",
-					"Please save or undo changes", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+					"Please save or undo changes",
+					MessageBoxButton.OK,
+					MessageBoxImage.Exclamation);
 				return;
 			}
 
-			Exporter ex = new Exporter("Jukebox.NET Manager");
+			Exporter ex = new Exporter(Application.ResourceAssembly.GetName().Name);
 			if (this.dataGrid.SelectedItems.Count > 1)
 				foreach (DataRowView r in this.dataGrid.SelectedItems)
 					ex.Add(new Media(r.Row));
@@ -123,8 +129,10 @@ namespace Jukebox.NET.Manager
         {
 			if (this.textBox_filter.Text == string.Empty)
 				this.LoadFilter();
+
 			if (DatabaseManager.Instance.DataSet.Tables[0].Rows.Count == 0)
 			    this.Scan(sender, e);
+
 			this.DataContext = DatabaseManager.Instance.DataSet.Tables[0].DefaultView;
 		}
 
@@ -147,28 +155,28 @@ namespace Jukebox.NET.Manager
 			// Identify any new/modified rows and automatically rename files.
 			foreach (DataRow dr in DatabaseManager.Instance.DataSet.Tables[0].Rows)
 			{
-				if (dr.RowState == DataRowState.Modified)
+				if (dr.RowState != DataRowState.Modified)
+					continue;
+
+				string path = dr["path"].ToString();
+				if (!File.Exists(path))
+					continue;
+
+				string filename = Path.GetFileNameWithoutExtension(path);
+				string newPath = string.Empty;
+
+				if (dr["artist"].ToString().Trim() != string.Empty)
 				{
-					string path = dr["path"].ToString();
-					if (!File.Exists(path))
-						return;
+					if (filename != dr["title"].ToString() + " -- " + dr["artist"].ToString())
+						newPath = Path.Combine(Path.GetDirectoryName(path), dr["title"].ToString() + " -- " + dr["artist"].ToString() + Path.GetExtension(path));
+				}
+				else if (filename != dr["title"].ToString())
+					newPath = Path.Combine(Path.GetDirectoryName(path), dr["title"].ToString() + Path.GetExtension(path));
 
-					string filename = Path.GetFileNameWithoutExtension(path);
-					string newPath = string.Empty;
-
-					if (dr["artist"].ToString().Trim() != string.Empty)
-					{
-						if (filename != dr["title"].ToString() + " -- " + dr["artist"].ToString())
-							newPath = Path.Combine(Path.GetDirectoryName(path), dr["title"].ToString() + " -- " + dr["artist"].ToString() + Path.GetExtension(path));
-					}
-					else if (filename != dr["title"].ToString())
-						newPath = Path.Combine(Path.GetDirectoryName(path), dr["title"].ToString() + Path.GetExtension(path));
-
-					if (newPath != string.Empty)
-					{
-						File.Move(path, newPath);
-						dr["path"] = newPath;
-					}
+				if (newPath != string.Empty)
+				{
+					File.Move(path, newPath);
+					dr["path"] = newPath;
 				}
 			}
 

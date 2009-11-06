@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace Jukebox.NET.Client
 {
-	class HotKeys : IDisposable
+	class HotKeys
 	{
 		// Windows constants
 		private const int
@@ -51,16 +49,6 @@ namespace Jukebox.NET.Client
 			this.handle = hWnd;
 
 			// Register numeric keys
-			//RegisterHotKey(this.handle, 0, 0, (int)Keys.D0);
-			//RegisterHotKey(this.handle, 1, 0, (int)Keys.D1);
-			//RegisterHotKey(this.handle, 2, 0, (int)Keys.D2);
-			//RegisterHotKey(this.handle, 3, 0, (int)Keys.D3);
-			//RegisterHotKey(this.handle, 4, 0, (int)Keys.D4);
-			//RegisterHotKey(this.handle, 5, 0, (int)Keys.D5);
-			//RegisterHotKey(this.handle, 6, 0, (int)Keys.D6);
-			//RegisterHotKey(this.handle, 7, 0, (int)Keys.D7);
-			//RegisterHotKey(this.handle, 8, 0, (int)Keys.D8);
-			//RegisterHotKey(this.handle, 9, 0, (int)Keys.D9);
 			RegisterHotKey(this.handle, 0, 0, (int)Keys.NumPad0);
 			RegisterHotKey(this.handle, 1, 0, (int)Keys.NumPad1);
 			RegisterHotKey(this.handle, 2, 0, (int)Keys.NumPad2);
@@ -84,9 +72,7 @@ namespace Jukebox.NET.Client
 			RegisterHotKey(this.handle, VolumeUp.GetHashCode(), (int)MOD, (int)VolumeUp);
 		}
 
-		#region IDisposable Members
-
-		public void Dispose()
+		~HotKeys()
 		{
 			UnregisterHotKey(this.handle, 0);
 			UnregisterHotKey(this.handle, 1);
@@ -108,7 +94,5 @@ namespace Jukebox.NET.Client
 			UnregisterHotKey(this.handle, VolumeDown.GetHashCode());
 			UnregisterHotKey(this.handle, VolumeUp.GetHashCode());
 		}
-
-		#endregion
 	}
 }

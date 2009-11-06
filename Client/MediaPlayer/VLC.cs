@@ -10,7 +10,7 @@ using Jukebox.NET.Common;
 namespace Jukebox.NET.Client.MediaPlayer
 {
 	/// <summary>
-	/// An interface for VLC media player 1.0.x using the RC interface.
+	/// An interface for VLC media player 1.0.x using the RC interface. NO LONGER SUPPORTED!
 	/// </summary>
 	/// <remarks>
 	/// Documentation:

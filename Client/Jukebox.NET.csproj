@@ -80,7 +80,6 @@
     <Compile Include="HotKeys.cs" />
     <Compile Include="MediaPlayer\AbstractMediaPlayer.cs">
     </Compile>
-    <Compile Include="MediaPlayer\libVLC.cs" />
     <Compile Include="MediaPlayer\MediaPlayerFactory.cs" />
     <Compile Include="MediaPlayer\MPlayer.cs" />
     <Compile Include="MediaPlayer\VLC.cs">
@@ -117,7 +116,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Settings.cs" />
     <Compile Include="SettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
