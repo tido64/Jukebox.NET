@@ -294,7 +294,7 @@
 			this.Name = "SettingsForm";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "Microsoft® Visual Studio® 2008 settings";
+			this.Text = System.Windows.Forms.Application.ProductName;
 			this.groupBox_startup.ResumeLayout(false);
 			this.groupBox_startup.PerformLayout();
 			this.groupBox_osd.ResumeLayout(false);
