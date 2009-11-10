@@ -82,8 +82,6 @@
     </Compile>
     <Compile Include="MediaPlayer\MediaPlayerFactory.cs" />
     <Compile Include="MediaPlayer\MPlayer.cs" />
-    <Compile Include="MediaPlayer\VLC.cs">
-    </Compile>
     <Compile Include="Monitor.cs" />
     <Compile Include="OnScreenDisplay.cs">
       <SubType>Form</SubType>

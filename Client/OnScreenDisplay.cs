@@ -149,7 +149,7 @@ namespace Jukebox.NET.Client
 				this.TextDisplay.Text += "_";
 			try
 			{
-				this.TextDisplay.Text += " (" + DatabaseManager.Instance.FetchById(choice * (int)Math.Pow(10, offset)).Title + "?)";
+				this.TextDisplay.Text += " (" + DatabaseManager.Instance.Find(choice * (int)Math.Pow(10, offset)).Title + "?)";
 			}
 			catch
 			{
@@ -187,7 +187,7 @@ namespace Jukebox.NET.Client
 								Media media = null;
 								try
 								{
-									media = DatabaseManager.Instance.FetchById(this.choice);
+									media = DatabaseManager.Instance.Find(this.choice);
 								}
 								catch { }
 								if (media == null)
@@ -222,7 +222,7 @@ namespace Jukebox.NET.Client
 								Media media = null;
 								try
 								{
-									media = DatabaseManager.Instance.FetchById(this.choice);
+									media = DatabaseManager.Instance.Find(this.choice);
 								}
 								catch { }
 								if (media == null)

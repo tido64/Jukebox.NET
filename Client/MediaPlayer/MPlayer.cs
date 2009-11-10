@@ -17,13 +17,13 @@ namespace Jukebox.NET.Client.MediaPlayer
 	/// </summary>
 	class MPlayer : AbstractMediaPlayer
 	{
-		#region Code for handling that pesky MPlayer console
+		#region Code for handling that persistent MPlayer console
 
-		static readonly IntPtr HWND_BOTTOM = new IntPtr(1);
-		const UInt32 SWP_NOSIZE = 0x0001;
-		const UInt32 SWP_NOMOVE = 0x0002;
-		const UInt32 SWP_HIDEWINDOW = 0x0080;
-		const UInt32 SWP_ASSASSINATE = SWP_NOSIZE | SWP_NOMOVE | SWP_HIDEWINDOW;
+		private static readonly IntPtr HWND_BOTTOM = new IntPtr(1);
+		private const UInt32 SWP_NOSIZE = 0x0001;
+		private const UInt32 SWP_NOMOVE = 0x0002;
+		private const UInt32 SWP_HIDEWINDOW = 0x0080;
+		private const UInt32 SWP_ASSASSINATE = SWP_NOSIZE | SWP_NOMOVE | SWP_HIDEWINDOW;
 
 		[DllImport("user32")]
 		private static extern bool SetForegroundWindow(IntPtr hWnd);
@@ -41,6 +41,8 @@ namespace Jukebox.NET.Client.MediaPlayer
 		private List<Media> playlist;
 		private Panel mp_panel;
 		private Process mplayer;
+		private Random random;
+
 
 		public MPlayer() : base("MPlayer", "mplayer")
 		{
@@ -74,7 +76,7 @@ namespace Jukebox.NET.Client.MediaPlayer
 			this.mplayer.EnableRaisingEvents = true;
 			this.mplayer.Exited += this.mp_event;
 			this.mplayer.StartInfo.CreateNoWindow = false;
-			this.mplayer.StartInfo.FileName = "mplayer.exe";
+			this.mplayer.StartInfo.FileName = Properties.Settings.Default.PathToExe;
 			this.mplayer.StartInfo.RedirectStandardInput = true;
 			this.mplayer.StartInfo.UseShellExecute = false;
 			this.mplayer.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -87,10 +89,12 @@ namespace Jukebox.NET.Client.MediaPlayer
 		{
 			this.playing = false;
 			this.playlist_ptr++;
-			if (this.playlist_ptr == this.playlist.Count)
+			if (this.playlist_ptr == this.playlist.Count) // randomly add new media to play
 			{
-				this.filling = true;
-				return;
+				if (this.random == null)
+					this.random = new Random();
+				int id = this.random.Next(DatabaseManager.StartId, DatabaseManager.IdOffset + DatabaseManager.Instance.DataSet.Tables[0].Rows.Count);
+				this.playlist.Add(DatabaseManager.Instance.Find(id));
 			}
 			this.Play();
 		}
@@ -166,6 +170,14 @@ namespace Jukebox.NET.Client.MediaPlayer
 				this.Play();
 		}
 
+		public override List<Media> GetNextTracks(int tracks)
+		{
+			List<Media> t = new List<Media>();
+			for (int i = this.playlist_ptr + 1; i < Math.Min(this.playlist_ptr + tracks, this.playlist.Count); i++)
+				t.Add(this.playlist[i]);
+			return t;
+		}
+
 		public override void CycleAudioTracks()
 		{
 			this.Command("switch_audio");
@@ -218,7 +230,7 @@ namespace Jukebox.NET.Client.MediaPlayer
 
 		public override void VIPAdd(Media media)
 		{
-			if (this.playlist.Count == 0)
+			if (!this.playing)
 				this.Add(media);
 			else
 				this.playlist.Insert(this.playlist_ptr + 1, media);

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 using Jukebox.NET.Common;
@@ -24,6 +25,7 @@ namespace Jukebox.NET.Client.MediaPlayer
 
 		public abstract void Add(Media media);
 		public abstract void CycleAudioTracks();
+		public abstract List<Media> GetNextTracks(int tracks);
 		public abstract void Next();
 		public abstract void Pause();
 		public abstract void Previous();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Jukebox.NET.Client
 {
@@ -29,7 +30,12 @@ namespace Jukebox.NET.Client
 				ofd.Multiselect = false;
 				ofd.Title = "Select path for " + this.comboBox_mediaplayer.SelectedItem.ToString() + ":";
 				if (ofd.ShowDialog() == DialogResult.OK)
-					this.textBox_path.Text = ofd.FileName;
+				{
+					if (Path.GetDirectoryName(ofd.FileName) == Path.GetDirectoryName(Application.ExecutablePath))
+						this.textBox_path.Text = Path.GetFileName(ofd.FileName);
+					else
+						this.textBox_path.Text = ofd.FileName;
+				}
 			}
 		}
 
