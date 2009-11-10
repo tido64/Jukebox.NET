@@ -143,46 +143,17 @@ namespace Jukebox.NET.Manager
 		}
 
 		/// <summary>
-		/// Commits any changes to the database. Will try to rename the file to
-		/// "title -- artist" (or "title" if the artist field is empty)
-		/// whenever a row has been modified in any way.
+		/// Commits any changes to the database.
 		/// </summary>
 		private void Save(object sender, RoutedEventArgs e)
 		{
 			if (!DatabaseManager.Instance.DataSet.HasChanges())
 				return;
 
-			// Identify any new/modified rows and automatically rename files.
-			foreach (DataRow dr in DatabaseManager.Instance.DataSet.Tables[0].Rows)
-			{
-				if (dr.RowState != DataRowState.Modified)
-					continue;
-
-				string path = dr["path"].ToString();
-				if (!File.Exists(path))
-					continue;
-
-				string filename = Path.GetFileNameWithoutExtension(path);
-				string newPath = string.Empty;
-
-				if (dr["artist"].ToString().Trim() != string.Empty)
-				{
-					if (filename != dr["title"].ToString() + " -- " + dr["artist"].ToString())
-						newPath = Path.Combine(Path.GetDirectoryName(path), dr["title"].ToString() + " -- " + dr["artist"].ToString() + Path.GetExtension(path));
-				}
-				else if (filename != dr["title"].ToString())
-					newPath = Path.Combine(Path.GetDirectoryName(path), dr["title"].ToString() + Path.GetExtension(path));
-
-				if (newPath != string.Empty)
-				{
-					File.Move(path, newPath);
-					dr["path"] = newPath;
-				}
-			}
-
 			int rows = DatabaseManager.Instance.Commit();
-			if (rows == 0)
-				MessageBox.Show(DatabaseManager.Instance.LastMessage, "An error has occured while updating the database", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			string error = DatabaseManager.Instance.LastMessage;
+			if (error != string.Empty)
+				MessageBox.Show(error, "An error has occured while updating the database", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			else
 				MessageBox.Show("Committed " + rows.ToString() + " rows.", "Database updated", MessageBoxButton.OK, MessageBoxImage.Information);
 			this.Refresh(sender, e);
@@ -213,10 +184,9 @@ namespace Jukebox.NET.Manager
 
 		private void Switch(object sender, RoutedEventArgs e)
 		{
-			string tmp;
 			foreach (DataRowView r in this.dataGrid.SelectedItems)
 			{
-				tmp = r.Row["artist"].ToString();
+				string tmp = r.Row["artist"].ToString();
 				r.Row["artist"] = r.Row["title"];
 				r.Row["title"] = tmp;
 			}

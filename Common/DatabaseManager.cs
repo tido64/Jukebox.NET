@@ -9,7 +9,7 @@ namespace Jukebox.NET.Common
 	/// <remarks>http://msdn.microsoft.com/en-us/library/bb387004.aspx</remarks>
 	public sealed class DatabaseManager
 	{
-		public const int IdOffset = 999;
+		public const int IdOffset = 999, StartId = IdOffset + 1;
 
 		#region Private members
 
@@ -104,11 +104,11 @@ namespace Jukebox.NET.Common
 		}
 
 		/// <summary>
-		/// Fetches media given an id.
+		/// Find media given an id.
 		/// </summary>
-		/// <param name="id">The media to fetch</param>
+		/// <param name="id">The media to find</param>
 		/// <returns>The media with given id</returns>
-		public Media FetchById(int id)
+		public Media Find(int id)
 		{
 			id -= IdOffset;
 			DataRow dr = this.db_dataset.Tables[0].Rows.Find(id);

@@ -366,6 +366,13 @@ namespace Jukebox.NET.Client.MediaPlayer
 			Control("atrack " + track.ToString());
 		}
 
+		public override List<Media> GetNextTracks(int tracks)
+		{
+			List<Media> m = new List<Media>();
+			m.Add(this.NextTrack);
+			return m;
+		}
+
 		public override void Next()
 		{
 			if (this.playlistPtr < this.playlist.Count - 1)

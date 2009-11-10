@@ -15,7 +15,6 @@ namespace Jukebox.NET.Client
 	/// </summary>
 	/// <remarks>
 	/// TODO:
-	/// - When playlist is exhausted, randomly add new songs to play until input
 	/// - Show the next two or three
 	/// - Show requester (log in candy)
 	///

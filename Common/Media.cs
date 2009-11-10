@@ -4,12 +4,13 @@ namespace Jukebox.NET.Common
 {
 	public class Media
 	{
-		public const string SQLiteCreateTable = "CREATE TABLE [media] (id INTEGER PRIMARY KEY, path TEXT UNIQUE, title TEXT, artist TEXT, lyrics TEXT)";
+		public const string SQLiteCreateTable = "CREATE TABLE [media] (id INTEGER PRIMARY KEY, path TEXT UNIQUE, title TEXT, artist TEXT, audio_track INTEGER, lyrics TEXT)";
 		public const string PrimaryKey = "id";
 
 		public Media()
 		{
 			this.Id = -1;
+			this.AudioTrack = 1;
 			this.Artist = string.Empty;
 			this.Lyrics = string.Empty;
 			this.Path = string.Empty;
@@ -20,6 +21,7 @@ namespace Jukebox.NET.Common
 		{
 			this.Id = int.Parse(dr["id"].ToString());
 			this.Artist = dr["artist"].ToString();
+			//this.AudioTrack = (int)dr["audio_track"];
 			this.Lyrics = dr["lyrics"].ToString();
 			this.Path = dr["path"].ToString();
 			this.Title = dr["title"].ToString();
@@ -27,6 +29,7 @@ namespace Jukebox.NET.Common
 
 		public int Id { get; set; }
 		public string Artist { get; set; }
+		public int AudioTrack { get; set; }
 		public string Lyrics { get; set; }
 		public string Path { get; set; }
 		public string RequestedBy { get; set; }
@@ -37,6 +40,7 @@ namespace Jukebox.NET.Common
 			if (Id != -1)
 				dr["id"] = this.Id.ToString();
 			dr["artist"] = this.Artist;
+			//dr["audio_track"] = this.AudioTrack.ToString();
 			dr["lyrics"] = this.Lyrics;
 			dr["path"] = this.Path;
 			dr["title"] = this.Title;
