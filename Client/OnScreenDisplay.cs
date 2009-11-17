@@ -194,6 +194,8 @@ namespace Jukebox.NET.Client
 									this.ShowRequest("??");
 								else
 								{
+									if (Properties.Settings.Default.Drive.Length < 4)
+										media.Path = Properties.Settings.Default.Drive + media.Path.Substring(3);
 									this.mediaPlayer.Add(media);
 									this.ShowRequest(media.ToString());
 								}

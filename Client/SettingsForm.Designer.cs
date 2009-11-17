@@ -46,15 +46,15 @@
 			this.label_request = new System.Windows.Forms.Label();
 			this.button_cancel = new System.Windows.Forms.Button();
 			this.button_save = new System.Windows.Forms.Button();
-			this.flowLayoutPanel_main = new System.Windows.Forms.FlowLayoutPanel();
 			this.flowLayoutPanel_control = new System.Windows.Forms.FlowLayoutPanel();
+			this.label_drive = new System.Windows.Forms.Label();
+			this.comboBox_drive = new System.Windows.Forms.ComboBox();
 			this.groupBox_startup.SuspendLayout();
 			this.groupBox_osd.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_font)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_interval)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_media)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_request)).BeginInit();
-			this.flowLayoutPanel_main.SuspendLayout();
 			this.flowLayoutPanel_control.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -72,33 +72,31 @@
 			// 
 			// comboBox_mediaplayer
 			// 
-			this.comboBox_mediaplayer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboBox_mediaplayer.FormattingEnabled = true;
 			this.comboBox_mediaplayer.Location = new System.Drawing.Point(82, 19);
 			this.comboBox_mediaplayer.Name = "comboBox_mediaplayer";
-			this.comboBox_mediaplayer.Size = new System.Drawing.Size(299, 21);
+			this.comboBox_mediaplayer.Size = new System.Drawing.Size(225, 21);
 			this.comboBox_mediaplayer.Sorted = true;
 			this.comboBox_mediaplayer.TabIndex = 1;
 			// 
 			// groupBox_startup
 			// 
-			this.groupBox_startup.AutoSize = true;
 			this.groupBox_startup.Controls.Add(this.button_browse);
 			this.groupBox_startup.Controls.Add(this.textBox_path);
 			this.groupBox_startup.Controls.Add(this.comboBox_mediaplayer);
 			this.groupBox_startup.Controls.Add(this.checkBox_autostart);
 			this.groupBox_startup.Controls.Add(this.label_path);
 			this.groupBox_startup.Controls.Add(this.label_mediaplayer);
-			this.groupBox_startup.Location = new System.Drawing.Point(3, 3);
+			this.groupBox_startup.Location = new System.Drawing.Point(5, 5);
 			this.groupBox_startup.Name = "groupBox_startup";
-			this.groupBox_startup.Size = new System.Drawing.Size(387, 112);
+			this.groupBox_startup.Size = new System.Drawing.Size(387, 74);
 			this.groupBox_startup.TabIndex = 4;
 			this.groupBox_startup.TabStop = false;
 			this.groupBox_startup.Text = "Startup";
 			// 
 			// button_browse
 			// 
-			this.button_browse.Location = new System.Drawing.Point(306, 47);
+			this.button_browse.Location = new System.Drawing.Point(306, 43);
 			this.button_browse.Name = "button_browse";
 			this.button_browse.Size = new System.Drawing.Size(75, 23);
 			this.button_browse.TabIndex = 4;
@@ -108,7 +106,7 @@
 			// 
 			// textBox_path
 			// 
-			this.textBox_path.Location = new System.Drawing.Point(44, 49);
+			this.textBox_path.Location = new System.Drawing.Point(44, 45);
 			this.textBox_path.Name = "textBox_path";
 			this.textBox_path.ReadOnly = true;
 			this.textBox_path.Size = new System.Drawing.Size(256, 20);
@@ -121,7 +119,7 @@
 			this.checkBox_autostart.Checked = global::Jukebox.NET.Client.Properties.Settings.Default.Autostart;
 			this.checkBox_autostart.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.checkBox_autostart.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Jukebox.NET.Client.Properties.Settings.Default, "Autostart", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.checkBox_autostart.Location = new System.Drawing.Point(313, 76);
+			this.checkBox_autostart.Location = new System.Drawing.Point(313, 21);
 			this.checkBox_autostart.Name = "checkBox_autostart";
 			this.checkBox_autostart.Size = new System.Drawing.Size(68, 17);
 			this.checkBox_autostart.TabIndex = 3;
@@ -133,7 +131,7 @@
 			this.label_path.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)));
 			this.label_path.AutoSize = true;
-			this.label_path.Location = new System.Drawing.Point(6, 52);
+			this.label_path.Location = new System.Drawing.Point(6, 48);
 			this.label_path.Name = "label_path";
 			this.label_path.Size = new System.Drawing.Size(32, 13);
 			this.label_path.TabIndex = 0;
@@ -142,7 +140,6 @@
 			// 
 			// groupBox_osd
 			// 
-			this.groupBox_osd.AutoSize = true;
 			this.groupBox_osd.Controls.Add(this.numericUpDown_font);
 			this.groupBox_osd.Controls.Add(this.numericUpDown_interval);
 			this.groupBox_osd.Controls.Add(this.numericUpDown_media);
@@ -151,9 +148,9 @@
 			this.groupBox_osd.Controls.Add(this.label_interval);
 			this.groupBox_osd.Controls.Add(this.label_next);
 			this.groupBox_osd.Controls.Add(this.label_request);
-			this.groupBox_osd.Location = new System.Drawing.Point(3, 121);
+			this.groupBox_osd.Location = new System.Drawing.Point(5, 85);
 			this.groupBox_osd.Name = "groupBox_osd";
-			this.groupBox_osd.Size = new System.Drawing.Size(387, 95);
+			this.groupBox_osd.Size = new System.Drawing.Size(387, 86);
 			this.groupBox_osd.TabIndex = 5;
 			this.groupBox_osd.TabStop = false;
 			this.groupBox_osd.Text = "OSD";
@@ -256,29 +253,34 @@
 			this.button_save.UseVisualStyleBackColor = true;
 			this.button_save.Click += new System.EventHandler(this.button_save_Click);
 			// 
-			// flowLayoutPanel_main
-			// 
-			this.flowLayoutPanel_main.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
-			this.flowLayoutPanel_main.AutoSize = true;
-			this.flowLayoutPanel_main.Controls.Add(this.groupBox_startup);
-			this.flowLayoutPanel_main.Controls.Add(this.groupBox_osd);
-			this.flowLayoutPanel_main.Controls.Add(this.flowLayoutPanel_control);
-			this.flowLayoutPanel_main.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-			this.flowLayoutPanel_main.Location = new System.Drawing.Point(5, 5);
-			this.flowLayoutPanel_main.Margin = new System.Windows.Forms.Padding(0);
-			this.flowLayoutPanel_main.Name = "flowLayoutPanel_main";
-			this.flowLayoutPanel_main.Size = new System.Drawing.Size(393, 254);
-			this.flowLayoutPanel_main.TabIndex = 7;
-			// 
 			// flowLayoutPanel_control
 			// 
 			this.flowLayoutPanel_control.AutoSize = true;
 			this.flowLayoutPanel_control.Controls.Add(this.button_save);
 			this.flowLayoutPanel_control.Controls.Add(this.button_cancel);
-			this.flowLayoutPanel_control.Location = new System.Drawing.Point(3, 222);
+			this.flowLayoutPanel_control.Location = new System.Drawing.Point(230, 177);
 			this.flowLayoutPanel_control.Name = "flowLayoutPanel_control";
 			this.flowLayoutPanel_control.Size = new System.Drawing.Size(162, 29);
 			this.flowLayoutPanel_control.TabIndex = 6;
+			// 
+			// label_drive
+			// 
+			this.label_drive.AutoSize = true;
+			this.label_drive.Location = new System.Drawing.Point(11, 185);
+			this.label_drive.Name = "label_drive";
+			this.label_drive.Size = new System.Drawing.Size(35, 13);
+			this.label_drive.TabIndex = 7;
+			this.label_drive.Text = "Drive:";
+			// 
+			// comboBox_drive
+			// 
+			this.comboBox_drive.FormattingEnabled = true;
+			this.comboBox_drive.Items.AddRange(new object[] {
+            "Default"});
+			this.comboBox_drive.Location = new System.Drawing.Point(52, 182);
+			this.comboBox_drive.Name = "comboBox_drive";
+			this.comboBox_drive.Size = new System.Drawing.Size(64, 21);
+			this.comboBox_drive.TabIndex = 8;
 			// 
 			// SettingsForm
 			// 
@@ -287,14 +289,18 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoSize = true;
 			this.CancelButton = this.button_cancel;
-			this.ClientSize = new System.Drawing.Size(403, 264);
+			this.ClientSize = new System.Drawing.Size(397, 214);
 			this.ControlBox = false;
-			this.Controls.Add(this.flowLayoutPanel_main);
+			this.Controls.Add(this.comboBox_drive);
+			this.Controls.Add(this.label_drive);
+			this.Controls.Add(this.flowLayoutPanel_control);
+			this.Controls.Add(this.groupBox_osd);
+			this.Controls.Add(this.groupBox_startup);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Name = "SettingsForm";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = System.Windows.Forms.Application.ProductName;
+			this.Text = "Jukebox.NET settings";
 			this.groupBox_startup.ResumeLayout(false);
 			this.groupBox_startup.PerformLayout();
 			this.groupBox_osd.ResumeLayout(false);
@@ -303,8 +309,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_interval)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_media)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown_request)).EndInit();
-			this.flowLayoutPanel_main.ResumeLayout(false);
-			this.flowLayoutPanel_main.PerformLayout();
 			this.flowLayoutPanel_control.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -327,11 +331,12 @@
 		private System.Windows.Forms.NumericUpDown numericUpDown_request;
 		private System.Windows.Forms.Label label_request;
 		private System.Windows.Forms.Label label_path;
-		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel_main;
 		private System.Windows.Forms.NumericUpDown numericUpDown_interval;
 		private System.Windows.Forms.Label label_font;
 		private System.Windows.Forms.Label label_interval;
 		private System.Windows.Forms.NumericUpDown numericUpDown_font;
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel_control;
+		private System.Windows.Forms.Label label_drive;
+		private System.Windows.Forms.ComboBox comboBox_drive;
 	}
 }
