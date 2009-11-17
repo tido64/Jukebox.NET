@@ -58,23 +58,20 @@ namespace Jukebox.NET.Client.Properties {
                 this["PathToExe"] = value;
             }
         }
-
-		[global::System.Configuration.UserScopedSettingAttribute()]
-		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		[global::System.Configuration.DefaultSettingValueAttribute("60000")]
-		public int Interval
-		{
-			get
-			{
-				return ((int)(this["Interval"]));
-			}
-			set
-			{
-				this["Interval"] = value;
-			}
-		}
-
-		[global::System.Configuration.UserScopedSettingAttribute()]
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60000")]
+        public int Interval {
+            get {
+                return ((int)(this["Interval"]));
+            }
+            set {
+                this["Interval"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("15000")]
         public int TimeToDisplayMedia {
@@ -107,6 +104,18 @@ namespace Jukebox.NET.Client.Properties {
             }
             set {
                 this["FontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Default")]
+        public string Drive {
+            get {
+                return ((string)(this["Drive"]));
+            }
+            set {
+                this["Drive"] = value;
             }
         }
     }

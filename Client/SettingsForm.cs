@@ -10,15 +10,20 @@ namespace Jukebox.NET.Client
 		{
 			InitializeComponent();
 
+			foreach (DriveInfo di in DriveInfo.GetDrives())
+				this.comboBox_drive.Items.Add(di.ToString());
+			this.comboBox_drive.SelectedIndex = this.comboBox_drive.Items.IndexOf(Properties.Settings.Default.Drive);
+
 			this.comboBox_mediaplayer.Items.AddRange(MediaPlayer.MediaPlayerFactory.Players.ToArray());
 			this.comboBox_mediaplayer.SelectedIndex = MediaPlayer.MediaPlayerFactory.Players.BinarySearch(Properties.Settings.Default.MediaPlayer);
+
 			this.numericUpDown_font.Value = (decimal)Properties.Settings.Default.FontSize;
 			this.numericUpDown_interval.Value = Properties.Settings.Default.Interval / 1000;
 			this.numericUpDown_media.Value = Properties.Settings.Default.TimeToDisplayMedia / 1000;
 			this.numericUpDown_request.Value = Properties.Settings.Default.TimeToDisplayRequest / 1000;
 		}
 
-		#region Button handlers
+		#region Button actions
 
 		private void button_browse_Click(object sender, EventArgs e)
 		{
@@ -46,9 +51,10 @@ namespace Jukebox.NET.Client
 
 		private void button_save_Click(object sender, EventArgs e)
 		{
+			Properties.Settings.Default.Drive = (string)this.comboBox_drive.SelectedItem;
 			Properties.Settings.Default.FontSize = (float)this.numericUpDown_font.Value;
 			Properties.Settings.Default.Interval = (int)this.numericUpDown_interval.Value * 1000;
-			Properties.Settings.Default.MediaPlayer = this.comboBox_mediaplayer.SelectedItem.ToString();
+			Properties.Settings.Default.MediaPlayer = (string)this.comboBox_mediaplayer.SelectedItem;
 			Properties.Settings.Default.PathToExe = this.textBox_path.Text;
 			Properties.Settings.Default.TimeToDisplayMedia = (int)this.numericUpDown_media.Value * 1000;
 			Properties.Settings.Default.TimeToDisplayRequest = (int)this.numericUpDown_request.Value * 1000;
