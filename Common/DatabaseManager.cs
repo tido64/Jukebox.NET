@@ -55,6 +55,26 @@ namespace Jukebox.NET.Common
 
 		#endregion
 
+		public DataTable DataTable
+		{
+			get
+			{
+				if (this.db_dataset == null)
+					this.Load();
+				return this.db_dataset.Tables[0];
+			}
+		}
+
+		public bool HasChanges
+		{
+			get
+			{
+				if (this.db_dataset == null)
+					return false;
+				return this.db_dataset.HasChanges();
+			}
+		}
+
 		/// <summary>
 		/// Facility to fetch the last error message.
 		/// </summary>
@@ -93,13 +113,22 @@ namespace Jukebox.NET.Common
 			return rows;
 		}
 
-		public DataSet DataSet
+		/// <summary>
+		/// For manually running SQL queries. Used only under special circumstances.
+		/// </summary>
+		/// <param name="query">SQL query to execute</param>
+		public void Execute(string query)
 		{
-			get
+			lock (this.sql_adapter)
 			{
-				if (this.db_dataset == null)
-					this.Load();
-				return this.db_dataset;
+				using (SQLiteTransaction sql_transaction = this.sql_conn.BeginTransaction())
+				using (SQLiteCommand sql_cmd = this.sql_conn.CreateCommand())
+				{
+					sql_cmd.Transaction = sql_transaction;
+					sql_cmd.CommandText = query;
+					sql_cmd.ExecuteNonQuery();
+					sql_transaction.Commit();
+				}
 			}
 		}
 

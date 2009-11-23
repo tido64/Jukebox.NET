@@ -1,11 +1,15 @@
 ﻿<Window x:Class="Jukebox.NET.Manager.Manager"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:dg="http://schemas.microsoft.com/wpf/2008/toolkit"
+	xmlns:wpf="http://schemas.microsoft.com/wpf/2008/toolkit"
 	Icon="/Jukebox.NET Manager;component/Graphics/stock_music-library.png"
     Title="Jukebox.NET Manager"
 	Closing="OnClose" Loaded="Load" WindowStartupLocation="CenterScreen">
 	<Window.Resources>
+		<LinearGradientBrush x:Key="AlternateRowBackgroundBrush" StartPoint="0.5,0.0" EndPoint="0.5,1.0">
+			<GradientStop Color="#FFFEFEFF" Offset="0"/>
+			<GradientStop Color="#FFE4F0FC" Offset="1"/>
+		</LinearGradientBrush>
 		<Style TargetType="{x:Type StackPanel}">
 			<Setter Property="Orientation" Value="Horizontal" />
 		</Style>
@@ -13,52 +17,120 @@
 			<Setter Property="Padding" Value="2" />
 			<Setter Property="VerticalAlignment" Value="Center" />
 		</Style>
+		<Style TargetType="{x:Type ToolBar}">
+			<Setter Property="Height" Value="32" />
+		</Style>
+		<Style TargetType="{x:Type Label}">
+			<Setter Property="VerticalAlignment" Value="Center" />
+		</Style>
+		<Style TargetType="{x:Type wpf:DataGrid}">
+			<Setter Property="RowStyle">
+				<Setter.Value>
+					<Style TargetType="{x:Type wpf:DataGridRow}">
+						<Style.Triggers>
+							<Trigger Property="wpf:DataGridRow.AlternationIndex" Value="1">
+								<Setter Property="Background" Value="{StaticResource AlternateRowBackgroundBrush}" />
+								<Setter Property="BorderBrush" Value="{StaticResource AlternateRowBackgroundBrush}" />
+							</Trigger>
+							<Trigger Property="IsSelected" Value="True">
+								<Setter Property="Background" Value="#22000000" />
+								<Setter Property="BorderBrush" Value="#22000000" />
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style TargetType="{x:Type wpf:DataGridCell}">
+			<Style.Triggers>
+				<Trigger Property="IsSelected" Value="True">
+					<Setter Property="Background" Value="Transparent" />
+					<Setter Property="BorderBrush" Value="Transparent" />
+					<Setter Property="Foreground" Value="Black" />
+				</Trigger>
+			</Style.Triggers>
+			<Setter Property="Padding" Value="8,3" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="wpf:DataGridCell">
+						<Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+							<ContentPresenter />
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+			<Setter Property="VerticalAlignment" Value="Center" />
+		</Style>
 	</Window.Resources>
-	<DockPanel>
-		<ToolBarTray DockPanel.Dock="Top" IsLocked="True">
-			<ToolBar Height="32">
-				<Button Name="button_save" Click="Save">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="32" />
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<ToolBarTray Grid.Row="0" IsLocked="True">
+			<ToolBar>
+				<Button Click="Save">
 					<StackPanel>
 						<Image Source="Graphics\stock_save.png" />
 						<TextBlock>Save to database</TextBlock>
 					</StackPanel>
 				</Button>
-				<Button Name="button_discard" Click="Refresh">
+				<Button Click="RefreshView">
 					<StackPanel>
 						<Image Source="Graphics\edit-undo.png" />
 						<TextBlock>Undo changes</TextBlock>
 					</StackPanel>
 				</Button>
-				<Button Name="button_export" Click="Export">
+				<Button Click="Export">
 					<StackPanel>
 						<Image Source="Graphics\printer.png" />
 						<TextBlock>Export database</TextBlock>
 					</StackPanel>
 				</Button>
 			</ToolBar>
-			<ToolBar Height="32">
-				<Button Name="button_switch" Click="Switch">
+			<ToolBar>
+				<Label>Scan for new files:</Label>
+				<TextBox MinWidth="64" Name="textBox_filter"></TextBox>
+				<Button Click="Scan">
+					<StackPanel>
+						<Image Source="Graphics\add.png" />
+					</StackPanel>
+				</Button>
+			</ToolBar>
+			<ToolBar>
+				<Label>Search:</Label>
+				<TextBox MinWidth="128" Name="textBox_search"></TextBox>
+			</ToolBar>
+			<ToolBar >
+				<Button Click="CleanUp">
+					<StackPanel>
+						<Image Source="Graphics\object-flip-horizontal.png" />
+						<TextBlock>Clean up</TextBlock>
+					</StackPanel>
+				</Button>
+				<Button Click="Switch">
 					<StackPanel>
 						<Image Source="Graphics\object-flip-horizontal.png" />
 						<TextBlock>Switch title &#8660; artist</TextBlock>
 					</StackPanel>
 				</Button>
 			</ToolBar>
-			<ToolBar Height="32">
-				<Button Name="button_scan" Click="Scan">
-					<StackPanel>
-						<Image Source="Graphics\add.png" />
-						<TextBlock>Scan for new files...</TextBlock>
-					</StackPanel>
-				</Button>
-				<Label VerticalContentAlignment="Center">Filter:</Label>
-				<TextBox Name="textBox_filter"></TextBox>
-			</ToolBar>
 		</ToolBarTray>
-		<dg:DataGrid Name="dataGrid"
-			AlternatingRowBackground="FloralWhite" AlternationCount="2"
+		<wpf:DataGrid AlternationCount="2" AutoGenerateColumns="False" Grid.Row="1" Name="DataGrid"
 			CanUserAddRows="False" CanUserDeleteRows="True" CanUserResizeRows="False"
-			HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
-			ItemsSource="{Binding}" />
-	</DockPanel>
+			GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#FFCEDFF6"
+			ItemsSource="{Binding}">
+			<wpf:DataGrid.Columns>
+				<wpf:DataGridTextColumn Binding="{Binding title}" Header="Title" Width="SizeToCells" />
+				<wpf:DataGridTextColumn Binding="{Binding artist}" Header="Artist" Width="SizeToCells" />
+				<wpf:DataGridCheckBoxColumn Binding="{Binding alt_audio}" Header="Alt. audio" />
+				<wpf:DataGridTextColumn Binding="{Binding lyrics}" Header="Lyrics" Width="SizeToCells" />
+				<wpf:DataGridTextColumn Binding="{Binding path}" Header="Path" Width="SizeToCells" />
+			</wpf:DataGrid.Columns>
+		</wpf:DataGrid>
+		<StatusBar Grid.Row="2">
+			<TextBlock Margin="0" Name="Status" Padding="0"></TextBlock>
+		</StatusBar>
+	</Grid>
 </Window>

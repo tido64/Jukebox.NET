@@ -4,13 +4,13 @@ namespace Jukebox.NET.Common
 {
 	public class Media
 	{
-		public const string SQLiteCreateTable = "CREATE TABLE [media] (id INTEGER PRIMARY KEY, path TEXT UNIQUE, title TEXT, artist TEXT, audio_track INTEGER, lyrics TEXT)";
-		public const string PrimaryKey = "id";
+		public static string SQLiteCreateTable = string.Format("CREATE TABLE [media] ({0} INTEGER PRIMARY KEY, {1} TEXT UNIQUE, {2} TEXT, {3} TEXT, {4} INTEGER, {5} TEXT)",
+			MediaTable.Id, MediaTable.Path, MediaTable.Title, MediaTable.Artist, MediaTable.AltAudio, MediaTable.Lyrics);
+		public const string PrimaryKey = MediaTable.Id;
 
 		public Media()
 		{
 			this.Id = -1;
-			this.AudioTrack = 1;
 			this.Artist = string.Empty;
 			this.Lyrics = string.Empty;
 			this.Path = string.Empty;
@@ -19,17 +19,17 @@ namespace Jukebox.NET.Common
 
 		public Media(DataRow dr)
 		{
-			this.Id = int.Parse(dr["id"].ToString());
-			this.Artist = dr["artist"].ToString();
-			//this.AudioTrack = (int)dr["audio_track"];
-			this.Lyrics = dr["lyrics"].ToString();
-			this.Path = dr["path"].ToString();
-			this.Title = dr["title"].ToString();
+			this.Id = int.Parse(dr[MediaTable.Id].ToString());
+			this.AltAudio = int.Parse(dr[MediaTable.AltAudio].ToString()) > 0 ? true : false;
+			this.Artist = dr[MediaTable.Artist].ToString();
+			this.Lyrics = dr[MediaTable.Lyrics].ToString();
+			this.Path = dr[MediaTable.Path].ToString();
+			this.Title = dr[MediaTable.Title].ToString();
 		}
 
 		public int Id { get; set; }
+		public bool AltAudio { get; set; }
 		public string Artist { get; set; }
-		public int AudioTrack { get; set; }
 		public string Lyrics { get; set; }
 		public string Path { get; set; }
 		public string RequestedBy { get; set; }
@@ -38,19 +38,19 @@ namespace Jukebox.NET.Common
 		public void ToRow(ref DataRow dr)
 		{
 			if (Id != -1)
-				dr["id"] = this.Id.ToString();
-			dr["artist"] = this.Artist;
-			//dr["audio_track"] = this.AudioTrack.ToString();
-			dr["lyrics"] = this.Lyrics;
-			dr["path"] = this.Path;
-			dr["title"] = this.Title;
+				dr[MediaTable.Id] = this.Id.ToString();
+			dr[MediaTable.AltAudio] = this.AltAudio ? 1 : 0;
+			dr[MediaTable.Artist] = this.Artist;
+			dr[MediaTable.Lyrics] = this.Lyrics;
+			dr[MediaTable.Path] = this.Path;
+			dr[MediaTable.Title] = this.Title;
 		}
 
 		#region Overrided methods
 
 		public override bool Equals(object obj)
 		{
-			return Path == ((Media)obj).Path;
+			return this.Path == ((Media)obj).Path;
 		}
 
 		public override int GetHashCode()
@@ -60,9 +60,9 @@ namespace Jukebox.NET.Common
 
 		public override string ToString()
 		{
-			if (Artist == string.Empty)
-				return Title;
-			return Title + " (" + Artist + ")";
+			if (this.Artist == string.Empty)
+				return this.Title;
+			return this.Title + " (" + this.Artist + ")";
 		}
 
 		#endregion
