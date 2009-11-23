@@ -93,7 +93,7 @@ namespace Jukebox.NET.Client.MediaPlayer
 			{
 				if (this.random == null)
 					this.random = new Random();
-				int id = this.random.Next(DatabaseManager.StartId, DatabaseManager.IdOffset + DatabaseManager.Instance.DataSet.Tables[0].Rows.Count);
+				int id = this.random.Next(DatabaseManager.StartId, DatabaseManager.IdOffset + DatabaseManager.Instance.DataTable.Rows.Count);
 				this.playlist.Add(DatabaseManager.Instance.Find(id));
 			}
 			this.Play();
@@ -109,8 +109,8 @@ namespace Jukebox.NET.Client.MediaPlayer
 		private void Play()
 		{
 			string audio = string.Empty;
-			string media = this.playlist[this.playlist_ptr].Path.ToLower();
-			if (media.Contains(".ogm") && media.Contains("track 1"))
+			Media media = this.playlist[this.playlist_ptr];
+			if (media.Path.Contains(".ogm") && media.AltAudio)
 				audio = " -aid 1";
 
 			this.mplayer.StartInfo.Arguments = this.arguments + audio + " \"" + this.playlist[this.playlist_ptr].Path + "\"";
@@ -125,7 +125,7 @@ namespace Jukebox.NET.Client.MediaPlayer
 			this.playing = true;
 			TrackChange(this.CurrentlyPlaying);
 
-			if (media.Contains("track 1"))
+			if (media.AltAudio)
 				this.CycleAudioTracks();
 			//if (this.CurrentlyPlaying.RequestedBy != null)
 			//{

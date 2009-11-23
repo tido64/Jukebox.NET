@@ -14,18 +14,47 @@ namespace Jukebox.NET.Manager
 	/// <remarks>http://msdn.microsoft.com/en-us/library/aa970683.aspx</remarks>
 	public partial class Manager : Window
 	{
-		#region Code-behind
-
 		readonly string exportPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "medialist.html");
 		readonly string[] separators = new string[3] { " - ", " -- ", " _ " };
 		string filter;
+
+		#region Events
+
+		private void Load(object sender, RoutedEventArgs e)
+		{
+			if (this.textBox_filter.Text == string.Empty)
+			{
+				try
+				{
+					TextReader tr = new StreamReader("search.pattern");
+					this.textBox_filter.Text = tr.ReadLine().Trim();
+					tr.Close();
+					this.filter = this.textBox_filter.Text;
+				}
+				catch
+				{
+					TextWriter tw = File.CreateText("search.pattern");
+					this.filter = "*.mkv;*.mp3;*.ogm;*.vob";
+					tw.Write(this.filter);
+					this.textBox_filter.Text = this.filter;
+					tw.Close();
+				}
+			}
+
+			this.textBox_search.TextChanged += new System.Windows.Controls.TextChangedEventHandler(StartSearch);
+
+			if (DatabaseManager.Instance.DataTable.Rows.Count == 0)
+				this.Scan(sender, e);
+
+			this.RefreshView(sender, e);
+		}
 
 		/// <summary>
 		/// Ask the user to save changes when he closes the window.
 		/// </summary>
 		private void OnClose(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			if (DatabaseManager.Instance.DataSet.HasChanges())
+			if (DatabaseManager.Instance.HasChanges)
 				if (MessageBox.Show("Do you want to save?", Jukebox.NET.Manager.App.ResourceAssembly.GetName().Name, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
 					Save(sender, null);
 			if (this.textBox_filter.Text != this.filter)
@@ -36,27 +65,119 @@ namespace Jukebox.NET.Manager
 			}
 		}
 
-		/// <summary>
-		/// Loads filter patterns. Creates the file if it doesn't exist.
-		/// </summary>
-		private void LoadFilter()
+		private void StartSearch(object sender, System.Windows.Controls.TextChangedEventArgs e)
+		{
+			DatabaseManager.Instance.DataTable.DefaultView.RowFilter = string.Format("title LIKE '%{0}%'", this.textBox_search.Text);
+		}
+
+		#endregion
+
+		#region Buttons
+
+		private void CleanUp(object sender, RoutedEventArgs e)
 		{
 			try
 			{
-				TextReader tr = new StreamReader("search.pattern");
-				this.textBox_filter.Text = tr.ReadLine().Trim();
-				tr.Close();
-				this.filter = this.textBox_filter.Text;
+				DatabaseManager.Instance.Execute("ALTER TABLE [media] ADD " + MediaTable.AltAudio);
 			}
-			catch
+			catch { return; }
+			foreach (DataRow row in DatabaseManager.Instance.DataTable.Rows)
 			{
-				TextWriter tw = File.CreateText("search.pattern");
-				this.filter = "*.mkv;*.mp3;*.ogm;*.vob";
-				tw.Write(this.filter);
-				this.textBox_filter.Text = this.filter;
-				tw.Close();
+				string p = row[MediaTable.Path].ToString();
+				if (p.Contains("track 1"))
+				{
+					row[MediaTable.AltAudio] = 1;
+					row[MediaTable.Path] = p.Replace("\\track 1", "").Replace("\\Track 1", "");
+				}
+				else
+				{
+					row[MediaTable.AltAudio] = 0;
+					row[MediaTable.Path] = p.Replace("\\track 0", "").Replace("\\Track 0", "");
+				}
+			}
+			DatabaseManager.Instance.Commit();
+		}
+
+		private void Export(object sender, RoutedEventArgs e)
+		{
+			if (DatabaseManager.Instance.HasChanges)
+			{
+				MessageBox.Show("The database contains changes. Please save or undo them in order to perform an export.",
+					"Please save or undo changes",
+					MessageBoxButton.OK,
+					MessageBoxImage.Exclamation);
+				return;
+			}
+
+			Exporter ex = new Exporter(Application.ResourceAssembly.GetName().Name);
+			if (this.DataGrid.SelectedItems.Count > 1)
+				foreach (DataRowView r in this.DataGrid.SelectedItems)
+					ex.Add(new Media(r.Row));
+			else
+				foreach (DataRowView r in this.DataGrid.Items)
+					ex.Add(new Media(r.Row));
+
+			ex.WriteHTML(this.exportPath);
+			using (System.Diagnostics.Process proc = new System.Diagnostics.Process())
+			{
+				proc.StartInfo.FileName = this.exportPath;
+				proc.Start();
 			}
 		}
+
+		/// <summary>
+		/// Commits any changes to the database.
+		/// </summary>
+		private void Save(object sender, RoutedEventArgs e)
+		{
+			if (!DatabaseManager.Instance.HasChanges)
+				return;
+
+			int rows = DatabaseManager.Instance.Commit();
+			string error = DatabaseManager.Instance.LastMessage;
+			if (error != string.Empty)
+				MessageBox.Show(error, "An error has occured while updating the database", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			else
+				MessageBox.Show("Committed " + rows.ToString() + " rows.", "Database updated", MessageBoxButton.OK, MessageBoxImage.Information);
+			this.RefreshView(sender, e);
+		}
+
+		private void Scan(object sender, RoutedEventArgs e)
+		{
+			System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+			fbd.Description = "Choose a directory to add to the database:";
+			fbd.ShowNewFolderButton = false;
+			System.Windows.Forms.DialogResult dr = fbd.ShowDialog();
+
+			if (dr != System.Windows.Forms.DialogResult.OK)
+				return;
+
+			List<Media> media = new List<Media>();
+			this.Scan(media, fbd.SelectedPath);
+			DatabaseManager.Instance.DataTable.BeginLoadData();
+			foreach (Media m in media)
+			{
+				DataRow r = DatabaseManager.Instance.DataTable.NewRow();
+				m.ToRow(ref r);
+				DatabaseManager.Instance.DataTable.Rows.Add(r);
+			}
+			DatabaseManager.Instance.DataTable.EndLoadData();
+			media.Clear();
+		}
+
+		private void Switch(object sender, RoutedEventArgs e)
+		{
+			foreach (DataRowView r in this.DataGrid.SelectedItems)
+			{
+				string tmp = r.Row["artist"].ToString();
+				r.Row["artist"] = r.Row["title"];
+				r.Row["title"] = tmp;
+			}
+		}
+
+		#endregion
+
+		#region Internal
 
 		/// <summary>
 		/// Parses file for artist and title string.
@@ -82,6 +203,13 @@ namespace Jukebox.NET.Manager
 			return m;
 		}
 
+		private void RefreshView(object sender, RoutedEventArgs e)
+		{
+			DatabaseManager.Instance.Load();
+			this.DataContext = DatabaseManager.Instance.DataTable.DefaultView;
+			this.Status.Text = string.Format("Total: {0}", DatabaseManager.Instance.DataTable.Rows.Count);
+		}
+
 		/// <summary>
 		/// Scans a directory for media and adds them to the database.
 		/// </summary>
@@ -92,104 +220,6 @@ namespace Jukebox.NET.Manager
 			foreach (string pattern in patterns)
 				foreach (FileInfo fi in root.GetFiles(pattern, SearchOption.AllDirectories))
 					media.Add(Parse(fi.FullName));
-		}
-
-		#endregion
-
-		#region Interaction
-
-		private void Export(object sender, RoutedEventArgs e)
-		{
-			if (DatabaseManager.Instance.DataSet.HasChanges())
-			{
-				MessageBox.Show("The database contains changes. Please save or undo them in order to perform an export.",
-					"Please save or undo changes",
-					MessageBoxButton.OK,
-					MessageBoxImage.Exclamation);
-				return;
-			}
-
-			Exporter ex = new Exporter(Application.ResourceAssembly.GetName().Name);
-			if (this.dataGrid.SelectedItems.Count > 1)
-				foreach (DataRowView r in this.dataGrid.SelectedItems)
-					ex.Add(new Media(r.Row));
-			else
-				foreach (DataRowView r in this.dataGrid.Items)
-					ex.Add(new Media(r.Row));
-
-			ex.WriteHTML(this.exportPath);
-			using (System.Diagnostics.Process proc = new System.Diagnostics.Process())
-			{
-				proc.StartInfo.FileName = this.exportPath;
-				proc.Start();
-			}
-		}
-
-		private void Load(object sender, RoutedEventArgs e)
-        {
-			if (this.textBox_filter.Text == string.Empty)
-				this.LoadFilter();
-
-			if (DatabaseManager.Instance.DataSet.Tables[0].Rows.Count == 0)
-			    this.Scan(sender, e);
-
-			this.DataContext = DatabaseManager.Instance.DataSet.Tables[0].DefaultView;
-		}
-
-		private void Refresh(object sender, RoutedEventArgs e)
-		{
-			DatabaseManager.Instance.Load();
-			this.Load(sender, e);
-		}
-
-		/// <summary>
-		/// Commits any changes to the database.
-		/// </summary>
-		private void Save(object sender, RoutedEventArgs e)
-		{
-			if (!DatabaseManager.Instance.DataSet.HasChanges())
-				return;
-
-			int rows = DatabaseManager.Instance.Commit();
-			string error = DatabaseManager.Instance.LastMessage;
-			if (error != string.Empty)
-				MessageBox.Show(error, "An error has occured while updating the database", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-			else
-				MessageBox.Show("Committed " + rows.ToString() + " rows.", "Database updated", MessageBoxButton.OK, MessageBoxImage.Information);
-			this.Refresh(sender, e);
-		}
-
-		private void Scan(object sender, RoutedEventArgs e)
-		{
-			System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-			fbd.Description = "Choose a directory to add to the database:";
-			fbd.ShowNewFolderButton = false;
-			System.Windows.Forms.DialogResult dr = fbd.ShowDialog();
-
-			if (dr != System.Windows.Forms.DialogResult.OK)
-				return;
-
-			List<Media> media = new List<Media>();
-			this.Scan(media, fbd.SelectedPath);
-			DatabaseManager.Instance.DataSet.Tables[0].BeginLoadData();
-			foreach (Media m in media)
-			{
-				DataRow r = DatabaseManager.Instance.DataSet.Tables[0].NewRow();
-				m.ToRow(ref r);
-				DatabaseManager.Instance.DataSet.Tables[0].Rows.Add(r);
-			}
-			DatabaseManager.Instance.DataSet.Tables[0].EndLoadData();
-			media.Clear();
-		}
-
-		private void Switch(object sender, RoutedEventArgs e)
-		{
-			foreach (DataRowView r in this.dataGrid.SelectedItems)
-			{
-				string tmp = r.Row["artist"].ToString();
-				r.Row["artist"] = r.Row["title"];
-				r.Row["title"] = tmp;
-			}
 		}
 
 		#endregion
