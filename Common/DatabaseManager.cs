@@ -19,6 +19,7 @@ namespace Jukebox.NET.Common
 		private const string sql_adapter_str = "SELECT * FROM [media]";
 
 		private string db_last_msg;
+		private string drive;
 		private DataSet db_dataset;
 		private SQLiteDataAdapter sql_adapter;
 		private SQLiteConnection sql_conn;
@@ -140,8 +141,10 @@ namespace Jukebox.NET.Common
 		public Media Find(int id)
 		{
 			id -= IdOffset;
-			DataRow dr = this.db_dataset.Tables[0].Rows.Find(id);
-			return new Media(dr);
+			Media m = new Media(this.db_dataset.Tables[0].Rows.Find(id));
+			if (this.drive != null)
+				m.Path = this.drive + m.Path.Substring(3);
+			return m;
 		}
 
 		/// <summary>
@@ -173,6 +176,13 @@ namespace Jukebox.NET.Common
 				this.db_dataset.EnforceConstraints = false;
 				this.db_dataset.Tables[0].PrimaryKey = new DataColumn[] { this.db_dataset.Tables[0].Columns[Media.PrimaryKey] };
 			}
+		}
+
+		public void Load(string drive)
+		{
+			if (drive.Length < 4)
+				this.drive = drive;
+			this.Load();
 		}
 	}
 }

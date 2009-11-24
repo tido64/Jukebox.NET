@@ -101,7 +101,7 @@ namespace Jukebox.NET.Client
 				return;
 			if (this.osd == null)
 				this.osd = new OnScreenDisplay(this.mediaPlayer);
-			DatabaseManager.Instance.Load();
+			DatabaseManager.Instance.Load(Properties.Settings.Default.Drive);
 		}
 
 		#region IDisposable Members
