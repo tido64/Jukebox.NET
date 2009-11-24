@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:wpf="http://schemas.microsoft.com/wpf/2008/toolkit"
 	Icon="/Jukebox.NET Manager;component/Graphics/stock_music-library.png"
+	SizeToContent="Width"
     Title="Jukebox.NET Manager"
 	Closing="OnClose" Loaded="Load" WindowStartupLocation="CenterScreen">
 	<Window.Resources>
@@ -98,10 +99,6 @@
 					</StackPanel>
 				</Button>
 			</ToolBar>
-			<ToolBar>
-				<Label>Search:</Label>
-				<TextBox MinWidth="128" Name="textBox_search"></TextBox>
-			</ToolBar>
 			<ToolBar >
 				<Button Click="CleanUp">
 					<StackPanel>
@@ -115,6 +112,10 @@
 						<TextBlock>Switch title &#8660; artist</TextBlock>
 					</StackPanel>
 				</Button>
+			</ToolBar>
+			<ToolBar>
+				<Label>Search:</Label>
+				<TextBox MinWidth="128" Name="textBox_search"></TextBox>
 			</ToolBar>
 		</ToolBarTray>
 		<wpf:DataGrid AlternationCount="2" AutoGenerateColumns="False" Grid.Row="1" Name="DataGrid"

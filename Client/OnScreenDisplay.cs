@@ -28,8 +28,9 @@ namespace Jukebox.NET.Client
 		private string next = string.Empty;
 
 		// Input
-		private int choice = -1, input = 0;
+		private int input = 0;
 		private HotKeys hotkeys = null;
+		private Media media;
 
 		#endregion
 
@@ -138,30 +139,30 @@ namespace Jukebox.NET.Client
 		/// Display user input and show suggestions.
 		/// </summary>
 		/// <param name="choice">User input</param>
-		private void ShowRequest(int choice, int offset)
+		private void ShowRequest()
 		{
 			this.t_DisplayDown.Change(Timeout.Infinite, Timeout.Infinite);
 			if (!this.TextDisplay.Text.StartsWith(">") & !this.TextDisplay.Text.StartsWith("+") & !this.TextDisplay.Text.Equals(this.version))
 				this.next = this.TextDisplay.Text;
 
-			this.TextDisplay.Text = "> " + choice.ToString();
-			for (int i = 0; i < offset; i++)
-				this.TextDisplay.Text += "_";
-			try
-			{
-				this.TextDisplay.Text += " (" + DatabaseManager.Instance.Find(choice * (int)Math.Pow(10, offset)).Title + "?)";
-			}
-			catch
-			{
-				this.TextDisplay.Text += " (?)";
-			}
+			this.TextDisplay.Text = string.Format("> {0}{1} ({2}?)",
+				this.input.ToString(),
+				new string('_', Math.Max(4 - this.input.ToString().Length, 0)),
+				this.media == null ? string.Empty : this.media.Title);
 			this.DisplayUp();
 		}
 
-		private void ShowRequest(string choice)
+		private void ShowRequested()
 		{
-			this.TextDisplay.Text = "+ " + choice;
+			if (this.media == null)
+				this.TextDisplay.Text = "+ Please try again.";
+			else
+				this.TextDisplay.Text = string.Format("+ {0}. {1}", this.media.Id + DatabaseManager.IdOffset, this.media);
 			this.t_DisplayDown.Change(Properties.Settings.Default.TimeToDisplayRequest, Timeout.Infinite);
+
+			// Reset input
+			this.input = 0;
+			this.media = null;
 		}
 
 		#endregion
@@ -182,26 +183,9 @@ namespace Jukebox.NET.Client
 					switch ((Keys)vk)
 					{
 						case HotKeys.Add:
-							if (this.choice > 0)
-							{
-								Media media = null;
-								try
-								{
-									media = DatabaseManager.Instance.Find(this.choice);
-								}
-								catch { }
-								if (media == null)
-									this.ShowRequest("??");
-								else
-								{
-									if (Properties.Settings.Default.Drive.Length < 4)
-										media.Path = Properties.Settings.Default.Drive + media.Path.Substring(3);
-									this.mediaPlayer.Add(media);
-									this.ShowRequest(media.ToString());
-								}
-							}
-							this.choice = 0;
-							this.input = 0;
+							if (this.media != null)
+								this.mediaPlayer.Add(this.media);
+							this.ShowRequested();
 							break;
 						case HotKeys.Current:
 							ShowCurrent(this.mediaPlayer.CurrentlyPlaying);
@@ -219,24 +203,9 @@ namespace Jukebox.NET.Client
 							this.mediaPlayer.Previous();
 							break;
 						case HotKeys.VIPAdd:
-							if (this.choice > 0)
-							{
-								Media media = null;
-								try
-								{
-									media = DatabaseManager.Instance.Find(this.choice);
-								}
-								catch { }
-								if (media == null)
-									this.ShowRequest("??");
-								else
-								{
-									this.mediaPlayer.VIPAdd(media);
-									this.ShowRequest(media.ToString());
-								}
-							}
-							this.choice = 0;
-							this.input = 0;
+							if (this.media != null)
+								this.mediaPlayer.VIPAdd(this.media);
+							this.ShowRequested();
 							break;
 						case HotKeys.VolumeDown:
 							this.mediaPlayer.VolumeDown();
@@ -255,11 +224,22 @@ namespace Jukebox.NET.Client
 					if (this.input * 10 > int.MaxValue / 10)
 						this.input /= 10;
 					this.input = this.input * 10 + vk;
-					this.choice = this.input;
-					int offset = 0;
-					while (this.choice * Math.Pow(10, offset) <= DatabaseManager.IdOffset)
-						offset++;
-					this.ShowRequest(this.choice, offset);
+
+					// Rounding up
+					int choice = this.input;
+					while (choice <= DatabaseManager.IdOffset)
+						choice *= 10;
+
+					// Find media in database
+					try
+					{
+						this.media = DatabaseManager.Instance.Find(choice);
+					}
+					catch
+					{
+						this.media = null;
+					}
+					this.ShowRequest();
 				}
 			}
 			base.WndProc(ref m);

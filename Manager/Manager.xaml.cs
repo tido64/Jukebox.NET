@@ -78,21 +78,22 @@ namespace Jukebox.NET.Manager
 		{
 			try
 			{
-				DatabaseManager.Instance.Execute("ALTER TABLE [media] ADD " + MediaTable.AltAudio);
+				DatabaseManager.Instance.Execute("ALTER TABLE [media] ADD " + MediaTable.AltAudio + " INTEGER");
+				DatabaseManager.Instance.Load();
 			}
-			catch { return; }
+			catch { }
 			foreach (DataRow row in DatabaseManager.Instance.DataTable.Rows)
 			{
 				string p = row[MediaTable.Path].ToString();
-				if (p.Contains("track 1"))
+				if (p.ToLower().Contains("track 1"))
 				{
 					row[MediaTable.AltAudio] = 1;
-					row[MediaTable.Path] = p.Replace("\\track 1", "").Replace("\\Track 1", "");
+					row[MediaTable.Path] = p.Replace("\\Track 1", "");
 				}
 				else
 				{
 					row[MediaTable.AltAudio] = 0;
-					row[MediaTable.Path] = p.Replace("\\track 0", "").Replace("\\Track 0", "");
+					row[MediaTable.Path] = p.Replace("\\Track 0", "").Replace("_track 0", "");
 				}
 			}
 			DatabaseManager.Instance.Commit();

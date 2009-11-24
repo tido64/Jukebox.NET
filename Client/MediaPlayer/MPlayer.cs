@@ -185,8 +185,6 @@ namespace Jukebox.NET.Client.MediaPlayer
 
 		public override void Next()
 		{
-			if (this.playlist_ptr + 1 == this.playlist.Count)
-				return;
 			this.Command("quit");
 		}
 
