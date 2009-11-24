@@ -67,7 +67,7 @@ namespace Jukebox.NET.Manager
 
 		private void StartSearch(object sender, System.Windows.Controls.TextChangedEventArgs e)
 		{
-			DatabaseManager.Instance.DataTable.DefaultView.RowFilter = string.Format("title LIKE '%{0}%'", this.textBox_search.Text);
+			DatabaseManager.Instance.DataTable.DefaultView.RowFilter = string.Format("title LIKE '%{0}%' OR artist LIKE '%{0}%'", this.textBox_search.Text);
 		}
 
 		#endregion
