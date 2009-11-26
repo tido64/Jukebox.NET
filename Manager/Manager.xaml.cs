@@ -40,12 +40,7 @@ namespace Jukebox.NET.Manager
 					tw.Close();
 				}
 			}
-
 			this.textBox_search.TextChanged += new System.Windows.Controls.TextChangedEventHandler(StartSearch);
-
-			if (DatabaseManager.Instance.DataTable.Rows.Count == 0)
-				this.Scan(sender, e);
-
 			this.RefreshView(sender, e);
 		}
 

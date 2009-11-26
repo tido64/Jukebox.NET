@@ -9,7 +9,9 @@ namespace Jukebox.NET.Manager
 	sealed class Exporter
 	{
 		private const int constant = DatabaseManager.IdOffset;
-		private const string css = "body { font-family: Arial, sans-serif; }", footer = "</table>\n</body>\n</html>\n";
+		private const string
+			css = "body { font-family: Arial, sans-serif; }",
+			footer = "</table>\n</body>\n</html>\n";
 		private readonly string header;
 		private SortedList<string, Media> media;
 

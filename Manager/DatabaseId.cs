@@ -11,6 +11,9 @@ namespace Jukebox.NET.Manager
 
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
+			if (value.ToString() == string.Empty)
+				return value;
+
 			long id = (long)value;
 			return id + DatabaseManager.IdOffset;
 		}
