@@ -81,7 +81,7 @@ namespace Jukebox.NET.Client.MediaPlayer
 			this.mplayer.StartInfo.UseShellExecute = false;
 			this.mplayer.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
-			this.arguments = "-really-quiet -input nodefault-bindings -nojoystick -nolirc -nomouseinput -slave -wid " + this.mp_panel.Handle + " -noborder -vo direct3d";
+			this.arguments = "-really-quiet -input nodefault-bindings -framedrop -nojoystick -nolirc -nomouseinput -slave -wid " + this.mp_panel.Handle + " -noborder -vo direct3d";
 			this.playlist = new List<Media>();
 		}
 
