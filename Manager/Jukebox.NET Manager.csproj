@@ -114,6 +114,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoUpdate.cs" />
     <Compile Include="DatabaseId.cs" />
     <Compile Include="Exporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

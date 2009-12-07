@@ -42,6 +42,7 @@ namespace Jukebox.NET.Manager
 			}
 			this.textBox_search.TextChanged += new System.Windows.Controls.TextChangedEventHandler(StartSearch);
 			this.RefreshView(sender, e);
+			AutoUpdate.Check();
 		}
 
 		/// <summary>
