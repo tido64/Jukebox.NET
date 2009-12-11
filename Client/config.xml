@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<config>
+	<player>MPlayer</player>
+	<path>mplayer.exe</path>
+	<osd interval="60" media="15" requested="5" />
+	<font size="48">Segoe UI</font>
+	<drive></drive>
+</config>

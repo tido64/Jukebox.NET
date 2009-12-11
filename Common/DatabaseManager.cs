@@ -180,7 +180,7 @@ namespace Jukebox.NET.Common
 
 		public void Load(string drive)
 		{
-			if (drive.Length < 4)
+			if (drive.Length > 0)
 				this.drive = drive;
 			this.Load();
 		}
