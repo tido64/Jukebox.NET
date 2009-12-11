@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
-namespace Jukebox.NET.Client
+namespace Jukebox.NET
 {
 	class HotKeys
 	{
@@ -16,16 +15,16 @@ namespace Jukebox.NET.Client
 
 		// Hot keys
 		private const int MOD = MOD_CTRL;
-		public const Keys
-			Add = Keys.Add,			// Try and add the current id
-			Current = Keys.F5,		// Show currently playing
-			Cycle = Keys.F10,		// Cycle audio tracks
-			Next = Keys.F9,			// Advance in playlist
-			Pause = Keys.F8,		// Pause
-			Previous = Keys.F7,		// Regress in playlist
-			VIPAdd = Keys.F6,		// Try and add the current id (VIP)
-			VolumeDown = Keys.F11,	// Decrease volume
-			VolumeUp = Keys.F12;	// Increase volume
+		public const int
+			Add = 107,			// Try and add the current id
+			Current = 116,		// Show currently playing
+			Cycle = 121,		// Cycle audio tracks
+			Next = 120,			// Advance in playlist
+			Pause = 119,		// Pause
+			Previous = 118,		// Regress in playlist
+			VIPAdd = 117,		// Try and add the current id (VIP)
+			VolumeDown = 122,	// Decrease volume
+			VolumeUp = 123;		// Increase volume
 
 		#region Unmanaged code
 
@@ -43,33 +42,33 @@ namespace Jukebox.NET.Client
 		/// <summary>
 		/// Registers global hot keys.
 		/// </summary>
-		/// <param name="hWnd">Main form</param>
+		/// <param name="hWnd">Main window handle</param>
 		public HotKeys(IntPtr hWnd)
 		{
 			this.handle = hWnd;
 
 			// Register numeric keys
-			RegisterHotKey(this.handle, 0, 0, (int)Keys.NumPad0);
-			RegisterHotKey(this.handle, 1, 0, (int)Keys.NumPad1);
-			RegisterHotKey(this.handle, 2, 0, (int)Keys.NumPad2);
-			RegisterHotKey(this.handle, 3, 0, (int)Keys.NumPad3);
-			RegisterHotKey(this.handle, 4, 0, (int)Keys.NumPad4);
-			RegisterHotKey(this.handle, 5, 0, (int)Keys.NumPad5);
-			RegisterHotKey(this.handle, 6, 0, (int)Keys.NumPad6);
-			RegisterHotKey(this.handle, 7, 0, (int)Keys.NumPad7);
-			RegisterHotKey(this.handle, 8, 0, (int)Keys.NumPad8);
-			RegisterHotKey(this.handle, 9, 0, (int)Keys.NumPad9);
+			RegisterHotKey(this.handle, 0, 0, 96);
+			RegisterHotKey(this.handle, 1, 0, 97);
+			RegisterHotKey(this.handle, 2, 0, 98);
+			RegisterHotKey(this.handle, 3, 0, 99);
+			RegisterHotKey(this.handle, 4, 0, 100);
+			RegisterHotKey(this.handle, 5, 0, 101);
+			RegisterHotKey(this.handle, 6, 0, 102);
+			RegisterHotKey(this.handle, 7, 0, 103);
+			RegisterHotKey(this.handle, 8, 0, 104);
+			RegisterHotKey(this.handle, 9, 0, 105);
 
 			// Register hot keys
-			RegisterHotKey(this.handle, Add.GetHashCode(), 0, (int)Add);
-			RegisterHotKey(this.handle, Current.GetHashCode(), (int)MOD, (int)Current);
-			RegisterHotKey(this.handle, Cycle.GetHashCode(), (int)MOD, (int)Cycle);
-			RegisterHotKey(this.handle, Next.GetHashCode(), (int)MOD, (int)Next);
-			RegisterHotKey(this.handle, Pause.GetHashCode(), (int)MOD, (int)Pause);
-			RegisterHotKey(this.handle, Previous.GetHashCode(), (int)MOD, (int)Previous);
-			RegisterHotKey(this.handle, VIPAdd.GetHashCode(), (int)MOD, (int)VIPAdd);
-			RegisterHotKey(this.handle, VolumeDown.GetHashCode(), (int)MOD, (int)VolumeDown);
-			RegisterHotKey(this.handle, VolumeUp.GetHashCode(), (int)MOD, (int)VolumeUp);
+			RegisterHotKey(this.handle, Add.GetHashCode(), 0, Add);
+			RegisterHotKey(this.handle, Current.GetHashCode(), MOD, Current);
+			RegisterHotKey(this.handle, Cycle.GetHashCode(), MOD, Cycle);
+			RegisterHotKey(this.handle, Next.GetHashCode(), MOD, Next);
+			RegisterHotKey(this.handle, Pause.GetHashCode(), MOD, Pause);
+			RegisterHotKey(this.handle, Previous.GetHashCode(), MOD, Previous);
+			RegisterHotKey(this.handle, VIPAdd.GetHashCode(), MOD, VIPAdd);
+			RegisterHotKey(this.handle, VolumeDown.GetHashCode(), MOD, VolumeDown);
+			RegisterHotKey(this.handle, VolumeUp.GetHashCode(), MOD, VolumeUp);
 		}
 
 		~HotKeys()

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
 using Jukebox.NET.Common;
 
-namespace Jukebox.NET.Client.MediaPlayer
+namespace Jukebox.NET.MediaPlayer
 {
 	/// <summary>
 	/// MPlayer wrapper. Makes use of MPlayer's slave mode.
@@ -34,54 +32,29 @@ namespace Jukebox.NET.Client.MediaPlayer
 		#endregion
 
 		private readonly string arguments;
-		private bool filling, paused, playing;
+		private bool paused, playing;
 		private int playlist_ptr;
 		private EventHandler mp_event;
-		private Form mp_window;
+		private IntPtr hWnd;
 		private List<Media> playlist;
-		private Panel mp_panel;
 		private Process mplayer;
 		private Random random;
 
-
-		public MPlayer() : base("MPlayer", "mplayer")
+		public MPlayer(IntPtr hWnd) : base("MPlayer", "mplayer")
 		{
-			#region Initialize window
-
-			this.mp_panel = new Panel();
-			this.mp_panel.Dock = DockStyle.Fill;
-			this.mp_window = new Form();
-			this.mp_window.AccessibleRole = AccessibleRole.None;
-			this.mp_window.AutoValidate = AutoValidate.Disable;
-			this.mp_window.BackColor = Color.Black;
-			this.mp_window.BackgroundImageLayout = ImageLayout.None;
-			this.mp_window.CausesValidation = false;
-			this.mp_window.ClientSize = new Size(Monitor.Width, Monitor.Height);
-			this.mp_window.ControlBox = false;
-			this.mp_window.FormBorderStyle = FormBorderStyle.None;
-			this.mp_window.Location = new Point(Monitor.BoundStart, 0);
-			this.mp_window.Name = "Jukebox.NET > MPlayer";
-			this.mp_window.ShowIcon = false;
-			this.mp_window.ShowInTaskbar = false;
-			this.mp_window.TopMost = false;
-			this.mp_window.Controls.Add(this.mp_panel);
-			this.mp_window.ResumeLayout(false);
-			this.mp_window.StartPosition = FormStartPosition.Manual;
-			this.mp_window.Show();
-
-			#endregion
-
 			this.mp_event = new EventHandler(mplayer_Exited);
 			this.mplayer = new Process();
 			this.mplayer.EnableRaisingEvents = true;
 			this.mplayer.Exited += this.mp_event;
 			this.mplayer.StartInfo.CreateNoWindow = false;
-			this.mplayer.StartInfo.FileName = Properties.Settings.Default.PathToExe;
+			this.mplayer.StartInfo.FileName = App.Config.Path;
 			this.mplayer.StartInfo.RedirectStandardInput = true;
 			this.mplayer.StartInfo.UseShellExecute = false;
 			this.mplayer.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
-			this.arguments = "-really-quiet -input nodefault-bindings -framedrop -nojoystick -nolirc -nomouseinput -slave -wid " + this.mp_panel.Handle + " -noborder -vo direct3d";
+			this.hWnd = hWnd;
+			//this.arguments = "-really-quiet -input nodefault-bindings -framedrop -nojoystick -nolirc -nomouseinput -slave -wid " + this.hWnd + " -noborder -vo gl2:yuv=2";
+			this.arguments = "-really-quiet -input nodefault-bindings -framedrop -nojoystick -nolirc -nomouseinput -slave -wid " + this.hWnd + " -noborder -vo direct3d";
 			this.playlist = new List<Media>();
 		}
 
@@ -120,10 +93,14 @@ namespace Jukebox.NET.Client.MediaPlayer
 				this.mplayer.Refresh();
 			} while (this.mplayer.MainWindowHandle == IntPtr.Zero);
 			SetWindowPos(this.mplayer.MainWindowHandle, HWND_BOTTOM, 0, 0, 0, 0, SWP_ASSASSINATE);
-			SetForegroundWindow(this.mp_window.Handle);
+			try
+			{
+				SetForegroundWindow(this.hWnd);
+			}
+			catch { return; }
 
 			this.playing = true;
-			TrackChange(this.CurrentlyPlaying);
+			MediaChange(this.CurrentlyPlaying);
 
 			if (media.AltAudio)
 				this.CycleAudioTracks();
@@ -136,7 +113,7 @@ namespace Jukebox.NET.Client.MediaPlayer
 
 		#region AbstractMediaPlayer members
 
-		public override event TrackChange TrackChange;
+		public override event MediaChange MediaChange;
 
 		public override Media CurrentlyPlaying
 		{

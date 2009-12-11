@@ -4,11 +4,16 @@ using System.Windows.Forms;
 
 using Jukebox.NET.Common;
 
-namespace Jukebox.NET.Client.MediaPlayer
+namespace Jukebox.NET
+{
+	public delegate void MediaChange(Media m);
+}
+
+namespace Jukebox.NET.MediaPlayer
 {
 	public abstract class AbstractMediaPlayer
 	{
-		public abstract event TrackChange TrackChange;
+		public abstract event MediaChange MediaChange;
 
 		public AbstractMediaPlayer(string name, string shortName)
 		{

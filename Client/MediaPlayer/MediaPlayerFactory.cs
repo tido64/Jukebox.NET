@@ -1,25 +1,23 @@
 using System;
 using System.Collections.Generic;
 
-namespace Jukebox.NET.Client.MediaPlayer
+namespace Jukebox.NET.MediaPlayer
 {
 	sealed class MediaPlayerFactory
 	{
 		public static readonly List<string> Players = new List<string>() { "MPlayer" };
 
-		public static AbstractMediaPlayer Create()
+		public static AbstractMediaPlayer Create(IntPtr hWnd)
 		{
-			switch (Properties.Settings.Default.MediaPlayer)
+			switch (App.Config.Player.ToLower())//Properties.Settings.Default.MediaPlayer)
 			{
 				//case "Media Player Classic":
 				//    return new MPC();
-				case "MPlayer":
-				    return new MPlayer();
+				case "mplayer":
+				    return new MPlayer(hWnd);
 				//case "VLC media player":
 				//    return new VLC();
 				default:
-					//return new libVLC();
-					//return new MPlayer();
 					return null;
 			}
 		}
