@@ -102,12 +102,6 @@
 				</Button>
 			</ToolBar>
 			<ToolBar >
-				<Button Click="CleanUp">
-					<StackPanel>
-						<Image Source="Graphics\object-flip-horizontal.png" />
-						<TextBlock>Clean up</TextBlock>
-					</StackPanel>
-				</Button>
 				<Button Click="Switch">
 					<StackPanel>
 						<Image Source="Graphics\object-flip-horizontal.png" />

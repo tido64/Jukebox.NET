@@ -35,7 +35,6 @@ namespace Jukebox.NET.MediaPlayer
 		public abstract void Pause();
 		public abstract void Previous();
 		public abstract void Random();
-		public abstract void Restart();
 		public abstract void Shutdown();
 		public abstract void VIPAdd(Media media);
 		public abstract void VolumeUp();

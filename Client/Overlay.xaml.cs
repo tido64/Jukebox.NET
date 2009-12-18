@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Threading;
 
@@ -40,7 +42,9 @@ namespace Jukebox.NET
 			this.player = MediaPlayer.MediaPlayerFactory.Create(hWnd);
 			this.player.MediaChange += new MediaChange(this.MediaChange);
 
-			DatabaseManager.Instance.Load(App.Config.Drive);
+			DatabaseManager.Instance.Load();
+			if (App.Config.Drive != null)
+				DatabaseManager.Instance.Drive = App.Config.Drive;
 
 			this.hotkeys = new HotKeys(hWnd);
 			HwndSource src = HwndSource.FromHwnd(hWnd);
@@ -49,6 +53,16 @@ namespace Jukebox.NET
 			this.announcer = new DispatcherTimer();
 			this.announcer.Interval = TimeSpan.FromSeconds(App.Config.OSD.Interval);
 			this.announcer.Tick += new EventHandler(this.AnnounceNext);
+
+			// Context menu
+			foreach (MenuItem i in this.FontSizes.Items)
+			{
+				if (double.Parse((string)i.Header) == App.Config.Font.Size)
+				{
+					i.IsChecked = true;
+					break;
+				}
+			}
 		}
 
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -171,5 +185,64 @@ namespace Jukebox.NET
 			}
 			return IntPtr.Zero;
 		}
+
+		#region Context menu
+
+		private void Drives_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+		{
+			this.Drives.Items.Clear();
+			MenuItem mi = new MenuItem();
+			mi.Click += new RoutedEventHandler(this.OverrideDrive);
+			mi.Header = "Default";
+			mi.IsCheckable = true;
+			if (App.Config.Drive == null || App.Config.Drive == string.Empty)
+				mi.IsChecked = true;
+			else
+				mi.IsChecked = false;
+			this.Drives.Items.Add(mi);
+			foreach (DriveInfo di in DriveInfo.GetDrives())
+			{
+				MenuItem i = new MenuItem();
+				i.Click += new RoutedEventHandler(this.OverrideDrive);
+				i.Header = di.Name;
+				i.IsCheckable = true;
+				if (!mi.IsChecked && App.Config.Drive[0] == di.Name[0])
+					i.IsChecked = true;
+				this.Drives.Items.Add(i);
+			}
+		}
+
+		private void Exit(object sender, RoutedEventArgs e)
+		{
+			Application.Current.Shutdown();
+		}
+
+		private void OverrideDrive(object sender, RoutedEventArgs e)
+		{
+			App.Config.Changed = true;
+			MenuItem i = (MenuItem)sender;
+			string d = (string)i.Header;
+			if (d == "Default")
+				App.Config.Drive = string.Empty;
+			else
+				App.Config.Drive = d[0].ToString();
+			DatabaseManager.Instance.Drive = App.Config.Drive;
+		}
+
+		private void ResizeFont(object sender, RoutedEventArgs e)
+		{
+			App.Config.Changed = true;
+			object sz = (string)((MenuItem)sender).Header;
+			App.Config.Font.Size = double.Parse((string)sz);
+			foreach (MenuItem i in this.FontSizes.Items)
+			{
+				if (i.Header == sz)
+					continue;
+				i.IsChecked = false;
+			}
+			this.osd.Refresh();
+		}
+
+		#endregion
 	}
 }

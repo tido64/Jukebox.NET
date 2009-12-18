@@ -2,4 +2,24 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	Background="Black" Closing="Window_Closing" Icon="stock_music-library.ico" SourceInitialized="Overlay_SourceInitialized"
-	ResizeMode="NoResize" Top="0" WindowStyle="None"/>
+	ResizeMode="NoResize" Top="0" WindowStyle="None">
+	<Window.ContextMenu>
+		<ContextMenu>
+			<MenuItem Name="FontSizes" Header="Font size">
+				<MenuItem Header="16" IsCheckable="True" Click="ResizeFont"/>
+				<MenuItem Header="24" IsCheckable="True" Click="ResizeFont"/>
+				<MenuItem Header="32" IsCheckable="True" Click="ResizeFont"/>
+				<MenuItem Header="40" IsCheckable="True" Click="ResizeFont"/>
+				<MenuItem Header="48" IsCheckable="True" Click="ResizeFont"/>
+				<MenuItem Header="56" IsCheckable="True" Click="ResizeFont"/>
+				<MenuItem Header="64" IsCheckable="True" Click="ResizeFont"/>
+				<MenuItem Header="72" IsCheckable="True" Click="ResizeFont"/>
+			</MenuItem>
+			<MenuItem Name="Drives" Header="Drive" MouseEnter="Drives_MouseEnter">
+				<MenuItem/>
+			</MenuItem>
+			<Separator/>
+			<MenuItem Header="Exit" Click="Exit"></MenuItem>
+		</ContextMenu>
+	</Window.ContextMenu>
+</Window>

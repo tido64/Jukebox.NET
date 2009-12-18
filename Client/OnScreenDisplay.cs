@@ -98,7 +98,7 @@ namespace Jukebox.NET
 			this.dt_in.Interval = TimeSpan.Zero;
 			this.dt_in.Tick += new EventHandler(FadeIn);
 			this.dt_out = new DispatcherTimer();
-			this.dt_out.Interval = TimeSpan.FromSeconds(15);
+			this.dt_out.Interval = TimeSpan.FromSeconds(App.Config.OSD.Media);
 			this.dt_out.Tick += new EventHandler(FadeOut);
 
 			#endregion
@@ -161,5 +161,10 @@ namespace Jukebox.NET
 		}
 
 		#endregion
+
+		public void Refresh()
+		{
+			this.tb.FontSize = App.Config.Font.Size;
+		}
 	}
 }
