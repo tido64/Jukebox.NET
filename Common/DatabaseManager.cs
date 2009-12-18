@@ -19,8 +19,8 @@ namespace Jukebox.NET.Common
 		private const string sql_adapter_str = "SELECT * FROM [media]";
 
 		private string db_last_msg;
-		private string drive;
 		private DataSet db_dataset;
+		private DriveLetter drive;
 		private SQLiteDataAdapter sql_adapter;
 		private SQLiteConnection sql_conn;
 
@@ -63,6 +63,22 @@ namespace Jukebox.NET.Common
 				if (this.db_dataset == null)
 					this.Load();
 				return this.db_dataset.Tables[0];
+			}
+		}
+
+		public string Drive
+		{
+			get
+			{
+				return ((char)this.drive).ToString();
+			}
+
+			set
+			{
+				if (value.Length != 1)
+					this.drive = DriveLetter.Default;
+				else
+					this.drive = (DriveLetter)value[0];
 			}
 		}
 
@@ -115,25 +131,6 @@ namespace Jukebox.NET.Common
 		}
 
 		/// <summary>
-		/// For manually running SQL queries. Used only under special circumstances.
-		/// </summary>
-		/// <param name="query">SQL query to execute</param>
-		public void Execute(string query)
-		{
-			lock (this.sql_adapter)
-			{
-				using (SQLiteTransaction sql_transaction = this.sql_conn.BeginTransaction())
-				using (SQLiteCommand sql_cmd = this.sql_conn.CreateCommand())
-				{
-					sql_cmd.Transaction = sql_transaction;
-					sql_cmd.CommandText = query;
-					sql_cmd.ExecuteNonQuery();
-					sql_transaction.Commit();
-				}
-			}
-		}
-
-		/// <summary>
 		/// Find media given an id.
 		/// </summary>
 		/// <param name="id">The media to find</param>
@@ -142,8 +139,8 @@ namespace Jukebox.NET.Common
 		{
 			id -= IdOffset;
 			Media m = new Media(this.db_dataset.Tables[0].Rows.Find(id));
-			if (this.drive != null)
-				m.Path = this.drive + m.Path.Substring(3);
+			if (this.drive != DriveLetter.Default)
+				m.Path = this.Drive + m.Path.Substring(1);
 			return m;
 		}
 
@@ -176,13 +173,6 @@ namespace Jukebox.NET.Common
 				this.db_dataset.EnforceConstraints = false;
 				this.db_dataset.Tables[0].PrimaryKey = new DataColumn[] { this.db_dataset.Tables[0].Columns[Media.PrimaryKey] };
 			}
-		}
-
-		public void Load(string drive)
-		{
-			if (drive.Length > 0)
-				this.drive = drive;
-			this.Load();
 		}
 	}
 }

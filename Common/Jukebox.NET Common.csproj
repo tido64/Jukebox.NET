@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DatabaseManager.cs" />
+    <Compile Include="DriveLetter.cs" />
     <Compile Include="Kryp2.cs" />
     <Compile Include="Media.cs" />
     <Compile Include="MediaTable.cs" />

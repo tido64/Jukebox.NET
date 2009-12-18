@@ -11,7 +11,11 @@ namespace Jukebox.NET
 			this.Path = "mplayer.exe";
 			this.OSD = new OnScreenDisplay();
 			this.Font = new FontFace();
+			this.Drive = string.Empty;
 		}
+
+		[XmlIgnore()]
+		public bool Changed { get; set; }
 
 		[XmlElement("player", IsNullable=false)]
 		public string Player { get; set; }

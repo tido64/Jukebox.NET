@@ -5,21 +5,25 @@ namespace Jukebox.NET.MediaPlayer
 {
 	sealed class MediaPlayerFactory
 	{
-		public static readonly List<string> Players = new List<string>() { "MPlayer" };
+		private static readonly List<string> players = new List<string> { "mplayer" };
+
+		public static bool CanCreate(string p)
+		{
+			return players.Contains(p.ToLowerInvariant());
+		}
 
 		public static AbstractMediaPlayer Create(IntPtr hWnd)
 		{
-			switch (App.Config.Player.ToLower())//Properties.Settings.Default.MediaPlayer)
+			AbstractMediaPlayer p = null;
+			switch (App.Config.Player.ToLowerInvariant())
 			{
 				//case "Media Player Classic":
 				//    return new MPC();
 				case "mplayer":
-				    return new MPlayer(hWnd);
-				//case "VLC media player":
-				//    return new VLC();
-				default:
-					return null;
+				    p = new MPlayer(hWnd);
+					break;
 			}
+			return p;
 		}
 	}
 }
