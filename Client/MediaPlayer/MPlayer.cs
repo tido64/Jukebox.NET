@@ -53,8 +53,8 @@ namespace Jukebox.NET.MediaPlayer
 			this.mplayer.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
 			this.hWnd = hWnd;
-			//this.arguments = "-really-quiet -input nodefault-bindings -framedrop -nojoystick -nolirc -nomouseinput -slave -cache 8192 -wid " + this.hWnd + " -noborder -vo gl2 -vc coreavc,";
-			this.arguments = "-really-quiet -input nodefault-bindings -framedrop -nojoystick -nolirc -nomouseinput -slave -wid " + this.hWnd + " -noborder -vo direct3d";
+			//this.arguments = "-really-quiet -input nodefault-bindings -framedrop -nojoystick -nolirc -nomouseinput -slave -wid " + this.hWnd + " -noborder -vo gl2 -vc coreavc,";
+			this.arguments = "-really-quiet -input nodefault-bindings -nojoystick -nolirc -nomouseinput -slave -cache 8192 -wid " + this.hWnd + " -noborder -vo direct3d";
 			this.playlist = new List<Media>();
 		}
 
@@ -83,8 +83,13 @@ namespace Jukebox.NET.MediaPlayer
 		{
 			string audio = string.Empty;
 			Media media = this.playlist[this.playlist_ptr];
-			if (media.Path.EndsWith(".ogm") && media.AltAudio)
-				audio = " -aid 1";
+			if (media.AltAudio)
+			{
+				if (media.Path.ToLowerInvariant().EndsWith(".ogm"))
+					audio = " -aid 1";
+				else if (media.Path.ToLowerInvariant().EndsWith(".vob"))
+					audio = " -aid 129";
+			}
 
 			this.mplayer.StartInfo.Arguments = this.arguments + audio + " \"" + this.playlist[this.playlist_ptr].Path + "\"";
 			this.mplayer.Start();
@@ -103,8 +108,8 @@ namespace Jukebox.NET.MediaPlayer
 			//System.Threading.Thread.Sleep(1000);	// Necessary with -cache
 			MediaChange(this.CurrentlyPlaying);
 
-			if (!media.Path.EndsWith(".ogm") && media.AltAudio)
-				this.CycleAudioTracks();
+			//if (!media.Path.EndsWith(".ogm") && media.AltAudio)
+			//    this.CycleAudioTracks();
 			//if (this.CurrentlyPlaying.RequestedBy != null)
 			//{
 			//    this.Command("osd 1");
